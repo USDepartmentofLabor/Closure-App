@@ -245,9 +245,7 @@ class SettingsViewController: UIViewController {
             view.addGestureRecognizer(tap)
             
             settingsSearchBar.delegate = self //as? UISearchBarDelegate
-            settingsSearchBar.scopeButtonTitles = ["Cities A-Z", "State Codes A-Z", "Region"]
-
-            
+            settingsSearchBar.scopeButtonTitles = ["Cities A-Z", "State Codes A-Z", "Region"]            
             
             if (self.citySubscriptionSet.count != 0) {
                 self.loadCityStatusesFromSubscriptionSet()
@@ -271,10 +269,6 @@ class SettingsViewController: UIViewController {
             MBProgressHUD.hide(for: self.view, animated: true)
         }
     }   // end class
-
-
-
-
 
 
 //MARK: - Datasource and delegate methods

@@ -32,8 +32,6 @@ class StepOne : UIViewController {
     @IBOutlet weak var doneButton: UIBarButtonItem!
     
     @IBAction func doneButtonPressed(_ sender: Any) {
-        print("\n\nSTEP ONE: doneButtonPressed")
-        
         var cityNamesHash = [String: String]()
         var cityNamesIdHash = [String: String]()
         
@@ -205,8 +203,6 @@ class StepOne : UIViewController {
  
                             let cityNameRegion = cityState + "|" + regionName
                             
-                            print("\nSTEPONEVC: readCityListFromMtws: cityNameRegion: ", cityNameRegion)
-                            
                             self.cityNamesRegionList.append(cityNameRegion)
                         }
                     }
@@ -350,7 +346,7 @@ class StepOne : UIViewController {
     
     
     override func viewWillDisappear(_ animated: Bool) {
-        
+        NotificationCenter.default.removeObserver(self)
     }   // viewWillDisappear
     
     

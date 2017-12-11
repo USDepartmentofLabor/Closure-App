@@ -121,9 +121,7 @@ class ClosureViewController: UIViewController {
                         if let jsonArray = try? JSONSerialization.jsonObject(with: response.data!, options: []) as? NSArray {
                         
                             for updateDictionary in jsonArray! {
-                        
-                                print("CLOSUREVC: CITYSTATUS: loadCityStatusesFromMtws: updateDictionary: ", updateDictionary)
-                        
+                                                
                                 let ud = updateDictionary as! NSDictionary
                             
                                 let dictionary = ud["update"] as? [String:String]
@@ -217,7 +215,6 @@ class ClosureViewController: UIViewController {
         super.viewDidLoad()
         
         if self.revealViewController() != nil {
-            print("CLOSUREVC: CITYSTATUS: viewDidLoad: revealViewController() != nil")
             menuButton.target = self.revealViewController()
             menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
         }
