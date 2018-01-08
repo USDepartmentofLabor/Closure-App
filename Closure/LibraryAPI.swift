@@ -1,4 +1,4 @@
-//
+
 //  LibraryAPI.swift
 //
 //  Created by George Liu on 6/9/17.
@@ -26,7 +26,7 @@ class LibraryAPI: NSObject {
     
     private var runState = String()   // either initial or subsequent run
     
-    private var selectedCityStatus = CityStatus(region: "", state: "", cityName: "", cityStatus: "", cityNotes: "")
+    private var selectedCityStatus = CityStatus(region: "", state: "", cityName: "", cityStatus: "", cityNotes: "", updatedOn: "")
     
     let EMPTY_STRING = ""
         
@@ -157,7 +157,6 @@ class LibraryAPI: NSObject {
         cityNamesArray = defaults.object(forKey: "subscriptionSetKey") as? [String] ?? [String]()
         
         for item in cityNamesArray {
-            print("LibraryAPI: item: ", item)
             subscriptionCityPersistencyManager.insert(item)
         }
         
@@ -171,7 +170,6 @@ class LibraryAPI: NSObject {
             cityNamesArray = (defaults.array(forKey: "subscriptionSetKey") as? [String])!
             
             for item in cityNamesArray {
-                print("LibraryAPI: item: ", item)
                 subscriptionCityPersistencyManager.insert(item)
             }
         }
@@ -189,10 +187,12 @@ class LibraryAPI: NSObject {
     
     // MARK: Device Token Ops -------------------------
     func setDeviceTokenWith(myDeviceToken: String) {
-        deviceToken = myDeviceToken
+        deviceToken = myDeviceToken        
+        defaults.set(myDeviceToken, forKey: "deviceTokenKey")
     }
     
     func getDeviceToken() -> String {
+        deviceToken = (defaults.object(forKey: "deviceTokenKey")  as? String)!
         return deviceToken
     }
 
@@ -213,11 +213,6 @@ class LibraryAPI: NSObject {
         }
         return rc
     }
-    
-    
-    
-    
-    
     
     
     // MARK: masterCityNamesIdHash Ops ---------------------

@@ -36,12 +36,10 @@ class ClosureViewController: UIViewController {
 
     let NOCITYSUBSCRIPTIONS = 0
     
-    var searching:Bool! = false
-    var scopeIndex = 0
-    
-
     @IBAction func addCityButtonPressed(_ sender: Any) {
-        self.performSegue(withIdentifier: "closureAddCitiesSegue", sender: self)        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: "selectCitiesNavVC") as UIViewController
+        self.present(controller, animated: true, completion: nil)       
     }
     
     
@@ -93,6 +91,7 @@ class ClosureViewController: UIViewController {
         let subscriptionParam = deviceToken + "/" + formattedArray
         myUrl += subscriptionParam
         
+        
         //////////////////////////////////////////////////////////////////////////////////////
         
         self.cityStatuses.removeAll()
@@ -111,21 +110,15 @@ class ClosureViewController: UIViewController {
                     case .success:
                     
                         self.hideLoadingHUD()
-                        // let data: Data // received from a network request, for example
-                    
-                        /****
-                         "{'updates':[{'update':{'region':'Region 1','state':'CT','city':'Bridgeport','status':'Shelter-In-Place','notes':'The purpose of this status update is to provide a sample of the Status Update in JSON for the DOL API developers .'}},{'update':{'region':'Region 1','state':'ME','city':'Augusta','status':'Delayed-Two-Hours','notes':'The purpose of this status update is to DELAYED TWO HOURS.'}},{'update':{'region':'Region 1','state':'Massachusetts','city':'Andover','status':'Open','notes':'The purpose of this status update is OPEN.'}},{'update':{'region':'Region 1','state':'VT','city':'Burlington','status':'Closed','notes':'The purpose of this status update is CLOSED.'}}]}" as Any
-                         ****/
-                    
                     
                         if let jsonArray = try? JSONSerialization.jsonObject(with: response.data!, options: []) as? NSArray {
-                        
+                            
                             for updateDictionary in jsonArray! {
                                                 
                                 let ud = updateDictionary as! NSDictionary
                             
                                 let dictionary = ud["update"] as? [String:String]
-
+ 
                                 let state = (dictionary as AnyObject).value(forKey: "state") as? String
                             
                                 let region = (dictionary as AnyObject).value(forKey: "region") as? String
@@ -135,16 +128,18 @@ class ClosureViewController: UIViewController {
                                 let status = (dictionary as AnyObject).value(forKey: "status") as? String
                         
                                 let note = (dictionary as AnyObject).value(forKey: "notes") as? String
-                            
-                            
+                                
+                                let updatedOn = (dictionary as AnyObject).value(forKey: "updatedOn") as? String
+                                
+                                
                                 if ( city == nil ) {
-                                    let alert = UIAlertController(title: "Alert", message: "City Statuses are unavailable at this time.", preferredStyle: UIAlertControllerStyle.alert)
+                                    let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                                     self.present(alert, animated: true, completion: nil)
                                 }
                                 else {
                                     cityStatusNamesSet.insert(city! + " " + state!)
-                                    let cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note! )
+                                    let cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
                                     self.cityStatuses.append(cs3)
                                 }
                             }   // end for
@@ -155,7 +150,8 @@ class ClosureViewController: UIViewController {
                         self.closureTableView.delegate = self
                         self.closureTableView.dataSource = self
                         self.closureTableView.backgroundView = nil
-                    self.closureTableView.reloadData()
+                        
+                        self.closureTableView.reloadData()
                     
                     case .failure(let error):
                         self.hideLoadingHUD()
@@ -163,15 +159,15 @@ class ClosureViewController: UIViewController {
                          ** NEED TO NOTIFY USER
                          */
                         print(error)
-                        var message = "Cannot get City status. "
-                        if (statusCode == nil) {
-                            message = message + "Server not responding."
-                        }
-                        else {
-                            message = message + "Status code: \(String(describing: statusCode))"
-                        }
+//                        let message = "Unable to get City status. Please try again later."
+//                        if (statusCode == nil) {
+//                            message = message + "Server not responding."
+//                        }
+//                        else {
+//                            message = message + "Status code: \(String(describing: statusCode))"
+//                        }
                     
-                        let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
+                        let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
                     }   // end switch
@@ -182,15 +178,15 @@ class ClosureViewController: UIViewController {
                 else {
                     self.hideLoadingHUD()
                     
-                    var message = "Cannot get City status. "
-                    if (statusCode == nil) {
-                        message = message + "Server not responding."
-                    }
-                    else {
-                        message = message + "Status code: \(String(describing: statusCode))"
-                    }
+                    let message = "Unable to get City status. Please try again later."
+//                    if (statusCode == nil) {
+//                        message = message + "Server not responding."
+//                    }
+//                    else {
+//                        message = message + "Status code: \(String(describing: statusCode))"
+//                    }
                     
-                    let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }
@@ -198,11 +194,6 @@ class ClosureViewController: UIViewController {
             }   // end Alamorefire
 
     }   // end func loadCityStatusesFromMtws()
-
-
-    func openSWRevealVC() {
-        self.revealViewController().revealToggle(self)
-    }
     
     
     func dismissKeyboard() {
@@ -210,7 +201,9 @@ class ClosureViewController: UIViewController {
         view.endEditing(true)
     }
     
-    //MARK: - view cycle
+    
+    ///////////////////////////////////////////////////////////////////////////////
+    //MARK: - view cycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -218,21 +211,10 @@ class ClosureViewController: UIViewController {
             menuButton.target = self.revealViewController()
             menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
         }
-        
-        if (LibraryAPI.sharedInstance.getSubscriptionCityCount() != self.NOCITYSUBSCRIPTIONS) {
-            // means subsequent run (and you have saved cities)
-            self.loadCityStatusesFromMtws()
-        }
-
-        self.closureSearchBar.delegate = self // as? UISearchBarDelegate
-        
-        closureSearchBar.scopeButtonTitles = ["Cities A-Z", "State Codes A-Z", "Region"]
-        
     }      // end viewdidload
 
-    
     override func viewWillAppear(_ animated: Bool) {
-        scopeIndex = listByCITIES
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -241,8 +223,24 @@ class ClosureViewController: UIViewController {
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
+        
+        self.addCityButton.tintColor = UIColor(rgb: DOLORANGECOLOR)
+
+        // at this point the view is created and added to the hierarchy
+        if (LibraryAPI.sharedInstance.getSubscriptionCityCount() != self.NOCITYSUBSCRIPTIONS) {
+            // means subsequent run (and you have saved cities)
+            self.loadCityStatusesFromMtws()
+        }
+        else {
+
+            let runState = LibraryAPI.sharedInstance.getRunStatus()
+            if (runState == INITIALSETTINGRUNSTATE) {
+                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                let controller = storyboard.instantiateViewController(withIdentifier: "selectCitiesNavVC") as UIViewController
+                self.present(controller, animated: true, completion: nil)
+            }
+        }
     }
-    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -263,6 +261,7 @@ class ClosureViewController: UIViewController {
 }   // end class
 
 
+///////////////////////////////////////////////////////////////////////////////
 //MARK: - Datasource and delegate methods
 
 extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
@@ -276,12 +275,8 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ closureTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rows = 0
         
-        if (searching == false) {
-            rows = cityStatuses.count
-        }
-        else {
-            rows = cityStatusesShortList.underestimatedCount
-        }
+        rows = cityStatuses.count
+        
         return rows
     }
     
@@ -289,17 +284,15 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ closureTableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
         let cell:UITableViewCell = closureTableView.dequeueReusableCell(withIdentifier: "closureCell")!
         
-        var cityStatusCell = cityStatuses[indexPath.row]
-        if (searching == true) {
-            cityStatusCell = cityStatusesShortList[indexPath.row]
-        }
-        
+        let cityStatusCell = cityStatuses[indexPath.row]
+
+        (cell.contentView.viewWithTag(100) as! UILabel).textColor = UIColor(rgb: DOLORANGECOLOR)
         (cell.contentView.viewWithTag(100) as! UILabel).text = cityStatusCell.cityName + " " + cityStatusCell.state // as? String
         (cell.contentView.viewWithTag(110) as! UILabel).text = cityStatusCell.cityStatus // as? String
         
         (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "openGreen24.png")
         if cityStatusCell.cityStatus.lowercased().range(of:"closed") != nil {
-            (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "closedRed24.png")
+            (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "closeRed17.png")
         }
                 
         return cell
@@ -316,7 +309,8 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        let cityStatusCell = cityStatuses[indexPath.row]        
+
+        let cityStatusCell = cityStatuses[indexPath.row]
         citySubscriptionSet.remove(cityStatusCell.cityName+" "+cityStatusCell.state)
         LibraryAPI.sharedInstance.setSubscriptionCitySetWith(citySubscriptionSet: citySubscriptionSet)
         
@@ -329,91 +323,6 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
 }   // end extension
-
-
-extension ClosureViewController: UISearchBarDelegate {
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (searchText == "") {
-            searching = false
-        }
-        else {
-            searching = true
-            
-            self.cityStatusesShortList.removeAll()
-                for index in 0 ..< self.cityStatuses.count {
-                    var currentString = String()
-                    
-                    switch scopeIndex {
-                    case listByCITIES:
-                        currentString = self.cityStatuses[index].cityName as String
-                        if currentString.lowercased().range(of: searchText.lowercased())  != nil {
-                            self.cityStatusesShortList.append(self.cityStatuses[index])
-                        }
-                    case listBySTATES:                
-                        currentString = self.cityStatuses[index].state as String
-                        if currentString.range(of: searchText.uppercased())  != nil {
-                            self.cityStatusesShortList.append(self.cityStatuses[index])
-                        }
-                    case listByREGION:
-                        currentString = self.cityStatuses[index].region as String
-                        if currentString.lowercased().range(of: searchText.lowercased())  != nil {
-                            self.cityStatusesShortList.append(self.cityStatuses[index])
-                        }
-                    default:
-                        print("noop")
-                    }   // end switch
-                    
-            }   // end for
-        }
-        self.closureTableView!.reloadData()
-    }
-    
-    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        closureSearchBar.showsScopeBar = true
-        closureSearchBar.sizeToFit()
-        closureSearchBar.setShowsCancelButton(true, animated: true)
-        return true
-    }
-    
-    public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
-        closureSearchBar.showsScopeBar = false
-        closureSearchBar.sizeToFit()
-        closureSearchBar.setShowsCancelButton(false, animated: true)
-        return true
-    }
-    
-    func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-        scopeIndex = selectedScope
-        closureSearchBar.becomeFirstResponder()
-        self.closureTableView!.reloadData()
-    }
-    
-    func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        self.view.endEditing(true)
-        self.closureSearchBar.endEditing(true)
-        closureSearchBar.resignFirstResponder()
-    }
-    
-    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
-        self.closureSearchBar.endEditing(true)
-        closureSearchBar.resignFirstResponder()
-        
-    }
-    
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        closureSearchBar.resignFirstResponder()
-    }
-    
-}
-
-extension StepOne: UISearchDisplayDelegate {
-    
-}
-
-
-
-
 
 
 

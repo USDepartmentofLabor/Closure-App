@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F2104" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -22,34 +22,45 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="scotty.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eaP-Sp-nwp">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="seattle_splash1.png" translatesAutoresizingMaskIntoConstraints="NO" id="eaP-Sp-nwp">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XGp-7k-KNs">
-                                <rect key="frame" x="35" y="125" width="304" height="61"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="51"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See the list of Department of Labor's closures and statuses" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sEp-np-NEy">
+                                <rect key="frame" x="70" y="591" width="236" height="33"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="236" id="Hr7-Mb-HN8"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="33" id="ZpF-Jc-eYB"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="13"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See the list of Department of Labor's closures and status" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sEp-np-NEy">
-                                <rect key="frame" x="35" y="213" width="304" height="33"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XGp-7k-KNs">
+                                <rect key="frame" x="36" y="550" width="303" height="33"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="33" id="Plx-Xi-EXs"/>
+                                    <constraint firstAttribute="height" constant="33" id="TX7-Z3-OHC"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="303" id="W0v-Ho-km4"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" type="system" weight="light" pointSize="29"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="sEp-np-NEy" firstAttribute="top" secondItem="XGp-7k-KNs" secondAttribute="bottom" constant="27" id="0gO-S8-in9"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="sEp-np-NEy" secondAttribute="bottom" constant="43" id="24K-xm-yqM"/>
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="eaP-Sp-nwp" secondAttribute="bottom" id="6bv-7v-d0c"/>
-                            <constraint firstItem="XGp-7k-KNs" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="105" id="C5J-zV-0Ml"/>
-                            <constraint firstItem="XGp-7k-KNs" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="19" id="DiR-tL-7Kb"/>
+                            <constraint firstItem="XGp-7k-KNs" firstAttribute="top" secondItem="Llm-lL-Icb" secondAttribute="bottom" constant="530" id="7Mj-gk-vh7"/>
+                            <constraint firstItem="sEp-np-NEy" firstAttribute="top" secondItem="XGp-7k-KNs" secondAttribute="bottom" constant="8" id="AWk-E4-GVC"/>
+                            <constraint firstItem="sEp-np-NEy" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="54" id="Agy-d7-Ip6"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="sEp-np-NEy" secondAttribute="trailing" constant="53" id="WNk-ev-rfI"/>
+                            <constraint firstItem="sEp-np-NEy" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" id="bB3-yI-6bL"/>
                             <constraint firstItem="eaP-Sp-nwp" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="bhj-kW-TYX"/>
-                            <constraint firstItem="sEp-np-NEy" firstAttribute="trailing" secondItem="XGp-7k-KNs" secondAttribute="trailing" id="mzA-JJ-Bzo"/>
-                            <constraint firstItem="sEp-np-NEy" firstAttribute="leading" secondItem="XGp-7k-KNs" secondAttribute="leading" id="vhW-db-OmQ"/>
+                            <constraint firstItem="XGp-7k-KNs" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="20" id="c3v-mG-NrC"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="XGp-7k-KNs" secondAttribute="trailing" constant="20" id="eev-0c-BVy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="XGp-7k-KNs" secondAttribute="trailing" constant="20" id="iLg-YF-fyX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="sEp-np-NEy" secondAttribute="trailing" constant="53" id="jvD-4g-ofT"/>
+                            <constraint firstItem="XGp-7k-KNs" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leadingMargin" constant="20" id="tZY-zH-5X9"/>
                             <constraint firstAttribute="trailingMargin" secondItem="XGp-7k-KNs" secondAttribute="trailing" constant="20" id="yBB-2S-qyl"/>
                             <constraint firstItem="eaP-Sp-nwp" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="yb0-Xo-9MN"/>
                             <constraint firstAttribute="trailing" secondItem="eaP-Sp-nwp" secondAttribute="trailing" id="zDy-4f-C6E"/>
@@ -62,6 +73,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="scotty.jpg" width="2848" height="4288"/>
+        <image name="seattle_splash1.png" width="2048" height="2732"/>
     </resources>
 </document>

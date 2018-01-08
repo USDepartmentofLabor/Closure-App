@@ -17,18 +17,21 @@ class CityStatus {
     var cityName = ""
     var cityStatus = ""
     var cityNotes = ""
+    var updatedOn = ""
+    
+    init(region: String, state: String, cityName: String, cityStatus: String, cityNotes: String, updatedOn: String) {
 
-    init(region: String, state: String, cityName: String, cityStatus: String, cityNotes: String) {
+        self.cityName = cityName
 
-            self.cityName = cityName
-
-            self.cityStatus = cityStatus
+        self.cityStatus = cityStatus
      
-            self.state = state
+        self.state = state
 
-            self.cityNotes = cityNotes
+        self.cityNotes = cityNotes
 
-            self.region = region
+        self.region = region
+        
+        self.updatedOn = updatedOn
     } 
     
 }

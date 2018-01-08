@@ -24,6 +24,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 
+## GoogleMaps
+
+Copyright 2017 Google
+
+## GooglePlaces
+
+Copyright 2017 Google
+
 ## MBProgressHUD
 
 Copyright © 2009-2016 Matej Bukovinski

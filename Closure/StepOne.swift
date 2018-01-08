@@ -21,8 +21,9 @@ let listBySTATES = 1
 let listByREGION = 2
 
 var scopeIndex = 0
-var statesArray = [String]()
-var cityStates = [[String]]()
+//var statesArray = [String]()
+//var cityStates = [[String]]()
+
 
 
 class StepOne : UIViewController {
@@ -77,7 +78,7 @@ class StepOne : UIViewController {
         var myUrl =  LibraryAPI.sharedInstance.getDolStagingCreateSubscriptionListBase() as String
         
         myUrl += subscriptionParam
-        
+                        
         showLoadingHUD()
         
         Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 15
@@ -96,7 +97,7 @@ class StepOne : UIViewController {
                     
                 case .failure( _):
                     self.hideLoadingHUD()
-                    let alert = UIAlertController(title: "Alert", message: "Cannot create subscription list. Failure error \(String(describing: statusCode))", preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: "Cannot create subscription list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     
@@ -113,7 +114,7 @@ class StepOne : UIViewController {
                     message = message + "Status code: \(String(describing: statusCode))"
                 }
                 
-                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Cannot create subscription list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
             }
@@ -135,21 +136,293 @@ class StepOne : UIViewController {
     
     var cityListJsonArray: [Any] = []
     
+    var cityFilterDictionary = Dictionary<String, Array<String>>()
+    var cityFilterTitleArray = [String]()
+    var cityFilterUniqueFirstCharacterArray = [String]()
+    var cityIndexToSectionDictionary = Dictionary<String, Int>()
+    
+    var stateFilterDictionary = Dictionary<String, Array<String>>()
+    var stateFilterTitleArray = [String]()
+    var stateFilterUniqueFirstCharacterArray = [String]()
+    var stateIndexToSectionDictionary = Dictionary<String, Int>()
+    
+    var regionFilterDictionary = Dictionary<String, Array<String>>()
+    var regionFilterTitleArray = [String]()
+    var regionFilterUniqueFirstCharacterArray = [String]()
+    var regionIndexToSectionDictionary = Dictionary<String, Int>()
+    
+    
+    var indexList = [String]()
+    
     @IBOutlet weak var stepOneSearchBar: UISearchBar!
     @IBOutlet weak var stepOneSaveButton: UIButton!
     
+    let BYCITY = 0
+    let BYSTATE = 1
+    let BYREGION = 2
+    
+    @IBOutlet weak var stepOneSegmentControl: UISegmentedControl!
+    
+    
+    @IBAction func indexChanged(_ sender: UISegmentedControl) {
+        scopeIndex = stepOneSegmentControl.selectedSegmentIndex
+        
+        switch (scopeIndex) {
+        case BYCITY:
+            stepOneSearchBar.placeholder = "Please enter a City name."
+        case BYSTATE:
+            stepOneSearchBar.placeholder = "Please enter a State name."
+        default:
+            stepOneSearchBar.placeholder = "Please enter a Region name."
+        }
+        
+        
+        self.stepOneTableView!.reloadData()
+    }
+
+
+    
     var citiesSubscriptionSearchResultsList: [String] = []
+    var statesSubscriptionSearchResultsList: [String] = []
+    var regionSubscriptionSearchResultsList: [String] = []
+    
     var searching:Bool! = false
     var filtered:[String] = []
     
     @IBOutlet weak var stepOneTableView: UITableView!
     
+//    func initializeIndexArray(){
+//        indexList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
+//    }
+//
+    
+    ///////////////////////////////////////////////////////////////////
+    //MARK: CITY INDEX LIST DATA STRUCTURES AND OPS
+    
+    // used for city index list
+    func initializeCityUniqueFirstCharacterArray() {
+        for item in cityNamesList {
+            let charString = "\(item[item.startIndex])" as String
+            cityFilterUniqueFirstCharacterArray.append(charString)
+        }
+        cityFilterUniqueFirstCharacterArray = Array(Set(cityFilterUniqueFirstCharacterArray).sorted())
+        
+//        print("cityFilterUniqueFirstCharacterArray: ", cityFilterUniqueFirstCharacterArray)
+    }
+    
+    func initializeCityFilterTitleArray() {
+        
+//        print("STEPONEVC: initializeCityFilterTitleArray: cityFilterDictionary", cityFilterDictionary)
+        
+        cityFilterTitleArray = cityFilterDictionary.keys.sorted()
+        
+//        print("STEPONEVC: initializeCityFilterTitleArray: cityFilterTitleArray", cityFilterTitleArray)
+    }
+    
+    func initializeCityFilterDictionary() {
+        cityFilterDictionary = [
+            "A": [],
+            "B": [],
+            "C": [],
+            "D": [],
+            "E": [],
+            "F": [],
+            "G": [],
+            "H": [],
+            "I": [],
+            "J": [],
+            "K": [],
+            "L": [],
+            "M": [],
+            "N": [],
+            "O": [],
+            "P": [],
+            "Q": [],
+            "R": [],
+            "S": [],
+            "T": [],
+            "U": [],
+            "V": [],
+            "W": [],
+            "X": [],
+            "Y": [],
+            "Z": []
+        ]
+    }
+    
+    // don't expect the number of states to change
+    func initializeCityIndexToSectionMapping() {
+//        cityIndexToSectionDictionary = ["A": 8, "B": 18, "C": 9, "D": 2, "E": 14, "F": 20, "G": 13, "H": 0, "I": 4, "J": 3, "K": 19, "L": 17, "M": 5, "N": 10, "O": 21, "P": 24, "Q": 25, "R": 12, "S": 7, "T": 23, "U": 16, "V": 15, "W":2, "X": 1, "Y": 11, "Z": 6]
+        
+        cityIndexToSectionDictionary = ["A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7, "I": 8, "J": 9, "K": 10, "L": 11, "M": 12, "N": 13, "O": 14, "P": 15, "Q": 16, "R": 17, "S": 18, "T": 19, "U": 20, "V": 21, "W": 22, "X": 23, "Y": 24, "Z": 25]
+    }
+
+    
+    ///////////////////////////////////////////////////////////////////
+    //MARK: REGION INDEX LIST DATA STRUCTURES AND OPS
+    func initializeRegionFilterTitleArray() {
+        regionFilterTitleArray =  [
+            "OASAM Region 4 - Atlanta",
+            "OASAM Region 1 - Boston",
+            "OASAM Region 5 - Chicago",
+            "OASAM Region 6 - Dallas",
+            "OASAM Region 8 - Denver",
+            "OASAM Region 7 - Kansas City",
+            "National Capital Region",
+            "OASAM Region 2 - New York",
+            "OASAM Region 3 - Philadelphia",
+            "OASAM Region 9 - San Francisco",
+            "OASAM Region 10 - Seattle"
+        ]
+    }
+    
+    func initializeRegionFilterDictionary() {
+        regionFilterDictionary = [
+            "OASAM Region 4 - Atlanta": [],
+            "OASAM Region 1 - Boston": [],
+            "OASAM Region 5 - Chicago": [],
+            "OASAM Region 6 - Dallas": [],
+            "OASAM Region 8 - Denver": [],
+            "OASAM Region 7 - Kansas City": [],
+            "National Capital Region": [],
+            "OASAM Region 2 - New York": [],
+            "OASAM Region 3 - Philadelphia": [],
+            "OASAM Region 9 - San Francisco": [],
+            "OASAM Region 10 - Seattle": []
+        ]
+    }
+    
+    // don't expect the number of states to change
+    func initializeRegionIndexToSectionMapping() {
+        regionIndexToSectionDictionary = ["A": 0, "B": 1, "C": 2, "D": 3, "K": 5, "N": 6, "P": 8, "S": 9]
+    }
+    
+    func initializeRegionUniqueFirstCharacterArray() {
+        regionFilterUniqueFirstCharacterArray = ["A", "B", "C", "D", "K", "N", "P", "S"]
+    }
+
+    
+    ///////////////////////////////////////////////////////////////////
+    //MARK: STATE INDEX LIST DATA STRUCTURES AND OPS
+    func initializeStateUniqueFirstCharacterArray() {
+        for item in stateFilterTitleArray {
+            let charString = "\(item[item.startIndex])" as String
+            stateFilterUniqueFirstCharacterArray.append(charString)
+        }
+        stateFilterUniqueFirstCharacterArray = Array(Set(stateFilterUniqueFirstCharacterArray).sorted())
+    }
+    
+    func initializeStateFilterTitleArray() {
+        stateFilterTitleArray = stateFilterDictionary.keys.sorted()
+    }
+    
+    func initializeStateFilterDictionary() {
+        stateFilterDictionary = [
+            "Alabama": [],
+            "Alaska": [],
+            "Arizona": [],
+            "Arkansas": [],
+            "California": [],
+            "Colorado": [],
+            "Connecticut": [],
+            "Delaware": [],
+            "District of Columbia": [],
+            "Florida": [],
+            "Georgia": [],
+            "Guam": [],
+            "Hawaii": [],
+            "Idaho": [],
+            "Illinois": [],
+            "Indiana": [],
+            "Iowa": [],
+            "Kansas": [],
+            "Kentucky": [],
+            "Louisiana": [],
+            "Maine": [],
+            "Maryland": [],
+            "Massachusetts": [],
+            "Michigan": [],
+            "Minnesota": [],
+            "Mississippi": [],
+            "Missouri": [],
+            "Montana": [],
+            "Nebraska": [],
+            "Nevada": [],
+            "New Hampshire": [],
+            "New Jersey": [],
+            "New Mexico": [],
+            "New York": [],
+            "North Carolina": [],
+            "North Dakota": [],
+            "Ohio": [],
+            "Oklahoma": [],
+            "Oregon": [],
+            "Pennsylvania": [],
+            "Rhode Island": [],
+            "South Carolina": [],
+            "South Dakota": [],
+            "Tennessee": [],
+            "Texas": [],
+            "Utah": [],
+            "Vermont": [],
+            "Virginia": [],
+            "Washington": [],
+            "West Virginia": [],
+            "Wisconsin": [],
+            "Wyoming": []
+        ]
+    }
+
+    // don't expect the number of states to change
+    func initializeStateIndexToSectionMapping() {
+        stateIndexToSectionDictionary = ["A": 0, "C": 4, "D": 7, "F": 9, "G": 10, "H": 12, "I": 13, "K": 17, "L": 19, "M": 20, "N": 28, "O": 36, "P": 39, "R": 40, "S": 41, "T": 43, "U": 45, "V": 46, "W":48]
+    }
+    
+
+    // to be called AFTER THE ENTIRE CITY LIST IS READ
+    func initializeCityDataStructures() {
+        initializeCityFilterDictionary()
+        initializeCityFilterTitleArray()
+        initializeCityUniqueFirstCharacterArray()
+        initializeCityIndexToSectionMapping()
+       
+    }
+    
+    func initializeThemThangs() {
+        
+        initializeStateFilterDictionary()
+        initializeStateFilterTitleArray()
+        initializeStateUniqueFirstCharacterArray()
+        initializeStateIndexToSectionMapping()
+        
+        initializeRegionFilterDictionary()
+        initializeRegionFilterTitleArray()
+        initializeRegionIndexToSectionMapping()
+        initializeRegionUniqueFirstCharacterArray()
+        
+//        initializeIndexArray()
+    }
+    
+    
+    ///////////////////////////////////////////////////////////////////
+    //MARK: API ENDPOINT OPS
     func readCityListFromMtws() {
         showLoadingHUD()
+
+        
+        initializeCityFilterDictionary()
+        initializeCityFilterTitleArray()
+
+        initializeThemThangs()
+        initializeCityDataStructures()
+        
+        var cArray = [String]()
+        var dArray = [String]()
+        var rArray = [String]()
         
         let myUrl =  LibraryAPI.sharedInstance.getDolStagingListOfCitiesBase() as String
         
-        Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 15
+        Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 10
         
         Alamofire.request(myUrl, method: .get, parameters: nil, encoding: JSONEncoding.default).responseJSON { response in
 
@@ -201,25 +474,72 @@ class StepOne : UIViewController {
                             let cityNameState = cityState + "|" + stateName + "|" + stateCode
                             self.cityNamesStateList.append(cityNameState)
  
-                            let cityNameRegion = cityState + "|" + regionName
+                            let cityNameStateRegion = cityState + "|" + stateName + "|" + regionName
                             
-                            self.cityNamesRegionList.append(cityNameRegion)
-                        }
-                    }
-                
+                            self.cityNamesRegionList.append(cityNameStateRegion)
+                            
+
+                            // state index list data structure and ops
+                            cArray.removeAll()
+                            // process cityFilterDictionary
+                            let charString = "\(cityState[cityState.startIndex])" as String
+
+                            if (self.cityFilterDictionary[charString] == nil) {
+                                cArray.append(cityState)
+                                self.cityFilterDictionary[charString] = cArray.sorted()
+                            }
+                            else {
+                                cArray = self.cityFilterDictionary[charString]!
+                                cArray.append(cityState)
+                                self.cityFilterDictionary[charString] = cArray.sorted()
+                            }
+                            
+                            
+                            // state index list data structure and ops
+                            dArray.removeAll()
+                            // process stateFilterDictionary
+                            if (self.stateFilterDictionary[stateName] == nil) {
+                                dArray.append(cityState)
+                                self.stateFilterDictionary[stateName] = dArray.sorted()
+                            }
+                            else {
+                                dArray = self.stateFilterDictionary[stateName]!
+                                dArray.append(cityState)
+                                self.stateFilterDictionary[stateName] = dArray.sorted()
+                            }
+                            
+                            
+                            rArray.removeAll()
+                            // process regionFilterDictionary
+                            if (self.regionFilterDictionary[regionName] == nil) {
+                                rArray.append(cityState)
+                                self.regionFilterDictionary[stateName] = rArray.sorted()
+                            }
+                            else {
+                                rArray = self.regionFilterDictionary[regionName]!
+                                rArray.append(cityState)
+                                self.regionFilterDictionary[regionName] = rArray.sorted()
+                            }
+                        }   // end if let dictionary = item as? [String: Any]
+                    }   // end for
+                    
+                    
                     /******* FOR THE ALPHABETICAL SORT SCOPE *******/
                     /******* SORT THE cityNamesList alphabetically, ascending *******/
                     self.cityNamesList.sort()
                 
+                    self.initializeCityUniqueFirstCharacterArray()
+                    self.initializeCityIndexToSectionMapping()
+                    
                     LibraryAPI.sharedInstance.setMasterCityNameHashWith(cityNameHash: self.cityNamesHash)
-                
                     NotificationCenter.default.post(name: Notification.Name(rawValue: readCityListFromMtwsSuccessNSKey), object: self)
+                
                 
                 case .failure(_):
                     self.hideLoadingHUD()
                     self.doneButton.isEnabled = false
                 
-                    let alert = UIAlertController(title: "Alert", message: "Cannot get City list.  Failure status code: \(String(describing: statusCode))", preferredStyle: UIAlertControllerStyle.alert)
+                    let alert = UIAlertController(title: "Cannot get city list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                     
@@ -233,15 +553,15 @@ class StepOne : UIViewController {
                 self.hideLoadingHUD()
                 self.doneButton.isEnabled = false
             
-                var message = "Cannot get City list. "
-                if (statusCode == nil) {
-                    message = message + "Server not responding."
-                }
-                else {
-                    message = message + "Status code: \(String(describing: statusCode))"
-                }
+                let message = "Unable to get City status. Please try again later."
+//                if (statusCode == nil) {
+//                    message = message + "Server not responding."
+//                }
+//                else {
+//                    message = message + "Status code: \(String(describing: statusCode))"
+//                }
                 
-                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: UIAlertControllerStyle.alert)
+                let alert = UIAlertController(title: "Cannot get city list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                 self.present(alert, animated: true, completion: nil)
                 
@@ -266,8 +586,10 @@ class StepOne : UIViewController {
     func handleReadCityListFromMtwsSuccess() {
         self.hideLoadingHUD()
         // 2. prep for data table load
-        self.stepOneTableView.delegate = self
-        self.stepOneTableView.dataSource = self
+//        self.stepOneTableView.delegate = self
+//        self.stepOneTableView.dataSource = self
+        
+        self.stepOneTableView.allowsSelectionDuringEditing = true
         self.stepOneTableView.backgroundView = nil
         self.stepOneTableView!.reloadData()
         
@@ -284,6 +606,8 @@ class StepOne : UIViewController {
     }
     
     
+    ///////////////////////////////////////////////////////////////////////////////////
+    //MARK: VIEW CYCLE MANAGEMENT
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -298,12 +622,33 @@ class StepOne : UIViewController {
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
-        stepOneSearchBar.scopeButtonTitles = ["Cities A-Z", "State Codes A-Z", "Region"]
+        
+        self.stepOneTableView.allowsMultipleSelectionDuringEditing = true
+        self.stepOneTableView.setEditing(true, animated: false)
+
     }
 
+    func prepStepOneSearchBar() {
+        stepOneSearchBar.layer.cornerRadius = 20
+        stepOneSearchBar.layer.borderWidth = 1
+        
+        let fancySwiftColor = UIColor(red: 0xE0, green: 0xE0, blue: 0xE0)
+        stepOneSearchBar.layer.borderColor = fancySwiftColor.cgColor
+        
+        setSearchBarToWhite()
+        
+        let textFieldInsideSearchBar = stepOneSearchBar.value(forKey: "searchField") as? UITextField
+        let imageV = textFieldInsideSearchBar?.leftView as! UIImageView
+        imageV.image = imageV.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
+        let fancyMagnifierSwiftColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
+        imageV.tintColor = fancyMagnifierSwiftColor
+        
+    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         self.doneButton.isEnabled = false
+        self.doneButton.tintColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
         
         self.cityNamesStateList.removeAll()
         self.cityNamesList.removeAll()
@@ -311,8 +656,11 @@ class StepOne : UIViewController {
         self.citySubscriptionSet.removeAll()
         self.cityNamesRegionList.removeAll()
         
-        self.citySubscriptionSet = LibraryAPI.sharedInstance.getSubscriptionCitySet()
+        self.stateFilterDictionary.removeAll()
+        self.regionFilterDictionary.removeAll()
         
+        self.citySubscriptionSet = LibraryAPI.sharedInstance.getSubscriptionCitySet()
+                
         // need to use notifications cuz Alamofire is an async process...
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleReadCityListFromMtwsSuccess), name: NSNotification.Name(rawValue: readCityListFromMtwsSuccessNSKey), object: nil)
         
@@ -323,18 +671,37 @@ class StepOne : UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(self.handleCreateSubscriptinListFailure), name: NSNotification.Name(rawValue: createSubscriptionListFailureNSKey), object: nil)
 
         scopeIndex = listByCITIES
-        
         readCityListFromMtws()
-
+        prepStepOneSearchBar()
+        
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: UIBarMetrics.default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        
         self.stepOneTableView!.reloadData()
     }   // viewWillAppear
 
 
-    override func viewDidAppear(_ animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {        
+        
+        let runState = LibraryAPI.sharedInstance.getRunStatus() as String
         if (self.citySubscriptionSet.count == 0) {
-            let alert = UIAlertController(title: "Alert", message: "Please choose which cities for which you wold like to receive notifications.", preferredStyle: UIAlertControllerStyle.alert)
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            if (runState == NORMALRUNSTATE) {
+            
+                let alertController = UIAlertController(title: "No City Selected", message: "Would you like to select a city to view its status?  If no city is selected, you will not be able to view the status of any cities.", preferredStyle: UIAlertControllerStyle.alert)
+                let cancelAction = UIAlertAction(title: "Yes", style: UIAlertActionStyle.cancel) { (result : UIAlertAction) -> Void in
+                }
+                
+                let okAction = UIAlertAction(title: "No", style: UIAlertActionStyle.default) { (result : UIAlertAction) -> Void in
+                    self.noop()
+                }
+                
+                alertController.addAction(cancelAction)
+                alertController.addAction(okAction)
+                self.present(alertController, animated: true, completion: nil)
+            }
+            else {      // INITIALSETTINGRUNSTATE
+                LibraryAPI.sharedInstance.setRunStatus(myRunState: NORMALRUNSTATE)
+            }
         }
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
@@ -362,8 +729,10 @@ class StepOne : UIViewController {
 }   // end class
 
 
+
+///////////////////////////////////////////////////////////////////////////////////
 extension StepOne: UITableViewDataSource {
-    func stepOneSwitchChangedX(_ sender: Any) {        
+    func stepOneSwitchChangedX(_ sender: Any) {
         let rowIndex:String = (sender as AnyObject).restorationIdentifier!!
         var optionalArr = rowIndex.components(separatedBy: "\"")
         let selectedCity: String = optionalArr[0]
@@ -378,74 +747,294 @@ extension StepOne: UITableViewDataSource {
         }
     }
     
-    func tableView(_ stepOneTableView: UITableView, numberOfSections: Int) -> Int {
-        return 1
-    }
-
-    func tableView(_ stepOneTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (searching == true) {
-            return self.citiesSubscriptionSearchResultsList.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        var sectionCount = 1
+        
+        if (searching == false) {
+            switch (scopeIndex) {
+            case BYCITY:
+                sectionCount = cityFilterTitleArray.count
+            case BYSTATE:
+                sectionCount = stateFilterTitleArray.count
+            default:            // BYREGION
+                sectionCount = regionFilterTitleArray.count
+            }
         }
-        else {
-            return self.cityNamesList.count
-        }
+        return sectionCount
     }
     
+    func tableView(_ stepOneTableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        var sectionTitle = ""
+        
+        if (searching == false) {
+            switch (scopeIndex) {
+            case BYCITY:
+                let mySectionTitle = self.cityFilterTitleArray[section]
+                let sectionArray = self.cityFilterDictionary[mySectionTitle]
+                let numberOfRowsInSectionCount = (sectionArray?.count)!
+                if (numberOfRowsInSectionCount > 0) {
+                    sectionTitle = cityFilterTitleArray[section]
+                }
+            case BYSTATE:
+                let mySectionTitle = self.stateFilterTitleArray[section]
+                let sectionArray = self.stateFilterDictionary[mySectionTitle]
+                let numberOfRowsInSectionCount = (sectionArray?.count)!
+                if (numberOfRowsInSectionCount > 0) {
+                    sectionTitle = stateFilterTitleArray[section]
+                }
+            default:            // BYREGION
+                let mySectionTitle = self.regionFilterTitleArray[section]
+                let sectionArray = self.regionFilterDictionary[mySectionTitle]
+                let numberOfRowsInSectionCount = (sectionArray?.count)!
+                if (numberOfRowsInSectionCount > 0) {
+                    sectionTitle = regionFilterTitleArray[section]
+                }
+            }
+        }
+        
+        return sectionTitle   // stateFilterTitleArray[section]
+    }
+   
+    func tableView(_ stepOneTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        var numberOfRowsInSectionCount = 0
+        
+        switch (scopeIndex) {
+        case BYCITY:
+            if (searching == true) {
+                numberOfRowsInSectionCount = self.citiesSubscriptionSearchResultsList.count
+            }
+            else {
+                let sectionTitle = self.cityFilterTitleArray[section]
+                let sectionArray = self.cityFilterDictionary[sectionTitle]
+                numberOfRowsInSectionCount = (sectionArray?.count)!
+            }
+            
+                
+        case BYSTATE:
+            let sectionTitle = self.stateFilterTitleArray[section]
+            let sectionArray = self.stateFilterDictionary[sectionTitle]
+            numberOfRowsInSectionCount = (sectionArray?.count)!
+        default:            // BYREGION
+            let sectionTitle = self.regionFilterTitleArray[section]
+            let sectionArray = self.regionFilterDictionary[sectionTitle]
+            numberOfRowsInSectionCount = (sectionArray?.count)!
+        }
+
+        return numberOfRowsInSectionCount
+    }
     
     func tableView(_ stepOneTableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = self.stepOneTableView.dequeueReusableCell(withIdentifier: "stepOneCell")!
         cell.textLabel?.textColor = UIColor.black
         
-        if (searching == false) {
-            
-            cell.textLabel?.text = cityNamesList[indexPath.row]
-            
-            let useAuthenticationSwitch = UISwitch()
-            cell.accessoryView = useAuthenticationSwitch
-            useAuthenticationSwitch.setOn(false, animated: true)
-            useAuthenticationSwitch.addTarget(self, action: #selector(StepOne.stepOneSwitchChangedX(_:)), for: UIControlEvents.valueChanged)
-            
-            if (citySubscriptionSet.contains(cityNamesList[indexPath.row]) == true) {
-                useAuthenticationSwitch.setOn(true, animated: true)
-                cell.textLabel?.textColor = UIColor.red
-            }
+        var sectionTitle = String()
+        var sectionArray = [String]()
+        var city = String()
         
-            useAuthenticationSwitch.restorationIdentifier = cityNamesList[indexPath.row]
-        }
-        else {
-            
-            cell.textLabel?.text = citiesSubscriptionSearchResultsList[indexPath.row]
-            
-            let useAuthenticationSwitch = UISwitch()
-            cell.accessoryView = useAuthenticationSwitch
-            useAuthenticationSwitch.setOn(false, animated: true)
-            useAuthenticationSwitch.addTarget(self, action: #selector(StepOne.stepOneSwitchChangedX(_:)), for: UIControlEvents.valueChanged)
-            
-            if (citySubscriptionSet.contains(citiesSubscriptionSearchResultsList[indexPath.row]) == true) {
-                useAuthenticationSwitch.setOn(true, animated: true)
-                cell.textLabel?.textColor = UIColor.red
+        switch (scopeIndex) {      // list by cities
+        case BYCITY:
+            if (searching == false) {
+                sectionTitle = cityFilterTitleArray[indexPath.section]
+                sectionArray = cityFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+                
+                cell.textLabel?.text = city
+            }
+            else {      // in search mode
+                cell.textLabel?.text = citiesSubscriptionSearchResultsList[indexPath.row]
+                
             }
             
-            useAuthenticationSwitch.restorationIdentifier = citiesSubscriptionSearchResultsList[indexPath.row]
+        case BYSTATE:
+            sectionTitle = stateFilterTitleArray[indexPath.section]
+            sectionArray = stateFilterDictionary[sectionTitle]!
+            city = sectionArray[indexPath.row]
+            
+            cell.textLabel?.text = city
+            
+        default:        // by region
+            sectionTitle = regionFilterTitleArray[indexPath.section]
+            sectionArray = regionFilterDictionary[sectionTitle]!
+            city = sectionArray[indexPath.row]
+            
+            cell.textLabel?.text = city
+        
+        }   // end switch
+        
+        if (citySubscriptionSet.contains(city)) {
+            cell.accessoryType = .checkmark
+            self.stepOneTableView.selectRow(at: indexPath, animated: false, scrollPosition: UITableViewScrollPosition.bottom)
+        } else {
+            cell.accessoryType = .none
         }
-
+        
         return cell
-    }
+    }   // end cellForRowAt
 
+        
+    // return title list for section index
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        
+        if (searching == false) {
+            switch scopeIndex {
+            case BYCITY:
+                return self.cityFilterUniqueFirstCharacterArray
+            case BYSTATE:
+                return self.stateFilterUniqueFirstCharacterArray
+            default:
+                return self.regionFilterUniqueFirstCharacterArray
+            }
+        }
+        return nil
+    }
+    
+    
+    // return section for given section index title
+    func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        var sectionIndex = 0
+        
+        if (searching == false) {
+            switch scopeIndex {
+            case BYCITY:
+                sectionIndex = cityIndexToSectionDictionary[title]!
+            case BYSTATE:
+                sectionIndex = stateIndexToSectionDictionary[title]!
+            default:
+                sectionIndex = regionIndexToSectionDictionary[title]!
+            }   // end switch
+        }
+        return sectionIndex
+        
+    }
+    
+    
     func noop() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let controller = storyboard.instantiateViewController(withIdentifier: "SWRevealVC") as UIViewController
+        let controller = storyboard.instantiateViewController(withIdentifier: "myCitiesNavVC") as UIViewController
         self.present(controller, animated: true, completion: nil)
     }
     
+    func setSearchBarToWhite() {
+        let textFieldArray = getSubviewsOfViewOfTypeTextField(view: stepOneSearchBar) as [UITextField]
+        let textField = textFieldArray[0] 
+        textField.background = UIImage.init(named: "searchBarWhite.png")
+        textField.textColor = UIColor.red
+    }
+    
+    func getSubviewsOfView(view: UIView) -> [UIView] {
+        var subviewArray = [UIView]()
+        if view.subviews.count == 0 {
+            return subviewArray
+        }
+        for subview in view.subviews {
+            subviewArray += self.getSubviewsOfView(view: subview)
+            subviewArray.append(subview)
+        }
+        return subviewArray
+    }
+    
+    func getSubviewsOfViewOfTypeTextField(view: UIView) -> [UITextField] {
+        var subviewArray = [UITextField]()
+        for subview in view.subviews {
+            subviewArray += self.getSubviewsOfViewOfTypeTextField(view: subview)
+            if let subview = subview as? UITextField {
+                subviewArray.append(subview)
+            }
+        }
+        return subviewArray
+    }
 }   // end class
 
 
 
 extension StepOne: UITableViewDelegate {
+
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        var sectionTitle = ""
+        var sectionArray = [String]()
+        var city = ""
+        
+        if (searching == false) {
+            switch scopeIndex {
+            case BYCITY:
+                sectionTitle = cityFilterTitleArray[indexPath.section]
+                sectionArray = cityFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+                
+            case BYSTATE:
+                sectionTitle = stateFilterTitleArray[indexPath.section]
+                sectionArray = stateFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+                
+            default:
+                sectionTitle = regionFilterTitleArray[indexPath.section]
+                sectionArray = regionFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+            }
+            
+        }
+        else {
+            city = citiesSubscriptionSearchResultsList[indexPath.row]
+        }
+        
+        if (citySubscriptionSet.contains(city) == true) {
+            citySubscriptionSet.remove(city)         // means was selected and now de-selected
+        }
+        else {
+            citySubscriptionSet.insert(city)           // means was NOT selected and now IS SELECTED
+        }
+        
+        print("STEPONEVC: didSelectRowAt: citySubscriptionSet: ", citySubscriptionSet)
+        
+    }
+
+    
+    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        print("STEPONEVC: didDeselectRowAtIndexPath" )
+        
+        var sectionTitle = ""
+        var sectionArray = [String]()
+        var city = ""
+        
+        if (searching == false) {
+            switch scopeIndex {
+            case BYCITY:
+                sectionTitle = cityFilterTitleArray[indexPath.section]
+                sectionArray = cityFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+                
+            case BYSTATE:
+                sectionTitle = stateFilterTitleArray[indexPath.section]
+                sectionArray = stateFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+                
+            default:
+                sectionTitle = regionFilterTitleArray[indexPath.section]
+                sectionArray = regionFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
+            }
+            
+        }
+        else {
+            city = citiesSubscriptionSearchResultsList[indexPath.row]
+        }
+        
+        if (citySubscriptionSet.contains(city) == true) {
+            citySubscriptionSet.remove(city)         // means was selected and now de-selected
+        }
+        else {
+            citySubscriptionSet.insert(city)           // means was NOT selected and now IS SELECTED
+        }
+        
+        print("STEPONEVC: didDeselectRowAt: citySubscriptionSet: ", citySubscriptionSet)
+    }
     
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////
+//MARK: UISEARCHBAR OPS
 extension StepOne: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -456,36 +1045,14 @@ extension StepOne: UISearchBarDelegate {
             searching = true
     
             self.citiesSubscriptionSearchResultsList.removeAll()
-            
-            switch scopeIndex {
-            case listByCITIES:
-                for index in 0 ..< self.cityNamesList.count {
-                    let currentString = self.cityNamesList[index] as String
-                    if currentString.lowercased().range(of: searchText.lowercased())  != nil {
-                        self.citiesSubscriptionSearchResultsList.append(currentString)
-                    }
+            self.statesSubscriptionSearchResultsList.removeAll()
+        
+            for index in 0 ..< self.cityNamesRegionList.count {
+                let currentString = self.cityNamesRegionList[index] as String
+                if currentString.lowercased().range(of: searchText.lowercased())  != nil {
+                    self.citiesSubscriptionSearchResultsList.append(currentString.components(separatedBy: "|")[0])
                 }
-
-            case listBySTATES:
-                for index in 0 ..< self.cityNamesStateList.count {
-                    let currentString = self.cityNamesStateList[index] as String
-                    
-                    if currentString.range(of: searchText.uppercased())  != nil {
-                        self.citiesSubscriptionSearchResultsList.append(currentString.components(separatedBy: "|")[0])
-                    }
-                }
-
-            case listByREGION:
-                for index in 0 ..< self.cityNamesRegionList.count {
-                    let currentString = self.cityNamesRegionList[index] as String
-                    if currentString.lowercased().range(of: searchText.lowercased())  != nil {
-                        self.citiesSubscriptionSearchResultsList.append(currentString.components(separatedBy: "|")[0])
-                    }
-                }
-                
-            default:
-                print("noop")
-            }   // end switch
+            }
         }
         self.stepOneTableView!.reloadData()
     }
@@ -493,14 +1060,17 @@ extension StepOne: UISearchBarDelegate {
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         stepOneSearchBar.showsScopeBar = true
         stepOneSearchBar.sizeToFit()
-        stepOneSearchBar.setShowsCancelButton(true, animated: true)
+//        stepOneSearchBar.setShowsCancelButton(true, animated: true)
+        
+        scopeIndex = BYCITY
+        
         return true
     }
  
     public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         stepOneSearchBar.showsScopeBar = false
         stepOneSearchBar.sizeToFit()
-        stepOneSearchBar.setShowsCancelButton(false, animated: true)
+//        stepOneSearchBar.setShowsCancelButton(false, animated: true)
         return true
     }
     
@@ -526,4 +1096,12 @@ extension StepOne: UISearchBarDelegate {
         stepOneSearchBar.resignFirstResponder()
     }
     
-}
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        stepOneSearchBar.text = ""
+    }
+    
+}   // end extension
+
+
+
+

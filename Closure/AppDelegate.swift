@@ -9,6 +9,8 @@
 import UIKit
 import UserNotifications
 import Alamofire
+import GoogleMaps
+
 
 
 @UIApplicationMain
@@ -38,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             guard granted else { return }
             self.getNotificationSettings()
         }
+        
         return true
     }
     
@@ -52,11 +55,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //MARK: Memento Ops -------------------------
     func saveDeviceToken(myDeviceToken: String) {
+//        print("setDeviceToken: ", myDeviceToken)
+        
         defaults.set(myDeviceToken, forKey: "myDeviceToken")
     }
     
     func loadDeviceToken() -> String {
         var deviceToken = defaults.object(forKey:"myDeviceToken") as? String
+        
+//        print("loadDeviceToken: ", deviceToken)
         
         if (deviceToken == nil) {
             deviceToken = "NOVALUE"
@@ -115,6 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let token = tokenParts.joined()
         
+        print("\n\n", token)
         LibraryAPI.sharedInstance.setDeviceTokenWith(myDeviceToken: token)
         saveDeviceToken(myDeviceToken: token)
         
@@ -127,13 +135,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 // SUBSEQUENT RUNS
                 updateDeviceTokenOnMTWS()
             }
-            
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            
-            let storyboard = UIStoryboard(name: "Main", bundle: nil)
-            let initialViewController = storyboard.instantiateViewController(withIdentifier: "SWRevealVC")
-            self.window?.rootViewController = initialViewController
-            self.window?.makeKeyAndVisible()
         }
     }
     

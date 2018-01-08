@@ -12,21 +12,28 @@
 		CB0ECCBB1FA239EB00DC6E94 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB0ECCB91FA239EB00DC6E94 /* LaunchScreen.storyboard */; };
 		CB0ECCCA1FA23EC300DC6E94 /* StepOne.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0ECCC91FA23EC300DC6E94 /* StepOne.swift */; };
 		CB0ECCCD1FA2625300DC6E94 /* HelperLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0ECCCC1FA2625300DC6E94 /* HelperLibrary.swift */; };
+		CB0F05741FE9907500690F33 /* left-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = CB0F05731FE9907500690F33 /* left-arrow.png */; };
+		CB0F05761FE994D000690F33 /* leftarroworange.png in Resources */ = {isa = PBXBuildFile; fileRef = CB0F05751FE994D000690F33 /* leftarroworange.png */; };
 		CB0F7BF01FAA4A35001EBFE1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB0F7BEF1FAA4A35001EBFE1 /* Main.storyboard */; };
+		CB1710961FEBF21600B79184 /* searchBarWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = CB1710951FEBF21600B79184 /* searchBarWhite.png */; };
 		CB2E760C1FA8EFA9001845A4 /* settings.png in Resources */ = {isa = PBXBuildFile; fileRef = CB2E760B1FA8EFA9001845A4 /* settings.png */; };
 		CB3FF3811FA26D3400608F5D /* LibraryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3FF3801FA26D3400608F5D /* LibraryAPI.swift */; };
 		CB3FF3831FA26D6700608F5D /* CityStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3FF3821FA26D6700608F5D /* CityStatus.swift */; };
 		CB4A123A1FBA1269004CA195 /* CityDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */; };
 		CB64837B1FC85F5800141D1E /* closeRed24.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6483791FC85F5800141D1E /* closeRed24.png */; };
 		CB64837C1FC85F5800141D1E /* openGreen24.png in Resources */ = {isa = PBXBuildFile; fileRef = CB64837A1FC85F5800141D1E /* openGreen24.png */; };
+		CB6FD3742000202A00E30FEC /* seattle_splash1.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6FD3732000202900E30FEC /* seattle_splash1.png */; };
 		CB83106E1FA3854400E6A4C6 /* scotty.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CB83106D1FA3854400E6A4C6 /* scotty.jpg */; };
 		CB8310701FA3C2E400E6A4C6 /* README in Resources */ = {isa = PBXBuildFile; fileRef = CB83106F1FA3C2E400E6A4C6 /* README */; };
+		CB91F4481FE46ABE00063BD1 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CB91F4471FE46ABE00063BD1 /* SWRevealViewController.m */; };
 		CB99E03F1FB0E1CE00C4F3E9 /* ClosureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB99E03E1FB0E1CE00C4F3E9 /* ClosureViewController.swift */; };
-		CBCAFA961FA8D60700015551 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CBCAFA951FA8D60700015551 /* SWRevealViewController.m */; };
-		CBD4BC6F1FAB79FA001FBBA2 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBD4BC6E1FAB79FA001FBBA2 /* SettingsViewController.swift */; };
+		CBC6814E1FFC214200B8EBA3 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC681501FFC214200B8EBA3 /* Alamofire.framework */; };
+		CBC6814F1FFC214200B8EBA3 /* MBProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC681511FFC214200B8EBA3 /* MBProgressHUD.framework */; };
+		CBD114011FF4313E00828E7E /* closeRed17.png in Resources */ = {isa = PBXBuildFile; fileRef = CBD114001FF4313E00828E7E /* closeRed17.png */; };
 		CBE036361FAA0E7F001E496C /* menu.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE036331FAA0E7F001E496C /* menu.png */; };
 		CBE036371FAA0E7F001E496C /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE036341FAA0E7F001E496C /* menu@2x.png */; };
 		CBE036381FAA0E7F001E496C /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CBE036351FAA0E7F001E496C /* menu@3x.png */; };
+		CBE3B4481FE9AF3B00AF6672 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CBE3B4471FE9AF3B00AF6672 /* CoreLocation.framework */; };
 		F239065A044646CE03CBF4CF /* Pods_Closure.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AC2B31EEC2CC7D8890537F50 /* Pods_Closure.framework */; };
 /* End PBXBuildFile section */
 
@@ -41,24 +48,30 @@
 		CB0ECCBC1FA239EB00DC6E94 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CB0ECCC91FA23EC300DC6E94 /* StepOne.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StepOne.swift; sourceTree = "<group>"; };
 		CB0ECCCC1FA2625300DC6E94 /* HelperLibrary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperLibrary.swift; sourceTree = "<group>"; };
+		CB0F05731FE9907500690F33 /* left-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "left-arrow.png"; sourceTree = "<group>"; };
+		CB0F05751FE994D000690F33 /* leftarroworange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = leftarroworange.png; path = ClosureImages/leftarroworange.png; sourceTree = "<group>"; };
 		CB0F7BEF1FAA4A35001EBFE1 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		CB1710951FEBF21600B79184 /* searchBarWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = searchBarWhite.png; path = ClosureImages/searchBarWhite.png; sourceTree = "<group>"; };
 		CB2E760B1FA8EFA9001845A4 /* settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settings.png; path = ClosureImages/settings.png; sourceTree = "<group>"; };
 		CB3FF3801FA26D3400608F5D /* LibraryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryAPI.swift; sourceTree = "<group>"; };
 		CB3FF3821FA26D6700608F5D /* CityStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityStatus.swift; sourceTree = "<group>"; };
 		CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityDetailPageVC.swift; sourceTree = "<group>"; };
 		CB6483791FC85F5800141D1E /* closeRed24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = closeRed24.png; path = ClosureImages/closeRed24.png; sourceTree = "<group>"; };
 		CB64837A1FC85F5800141D1E /* openGreen24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = openGreen24.png; path = ClosureImages/openGreen24.png; sourceTree = "<group>"; };
+		CB6FD3732000202900E30FEC /* seattle_splash1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = seattle_splash1.png; path = ClosureImages/seattle_splash1.png; sourceTree = "<group>"; };
 		CB83106D1FA3854400E6A4C6 /* scotty.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = scotty.jpg; path = ClosureImages/scotty.jpg; sourceTree = "<group>"; };
 		CB83106F1FA3C2E400E6A4C6 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		CB91F4461FE46ABE00063BD1 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SWRevealViewController.h; path = Closure/SWRevealViewController.h; sourceTree = "<group>"; };
+		CB91F4471FE46ABE00063BD1 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SWRevealViewController.m; path = Closure/SWRevealViewController.m; sourceTree = "<group>"; };
 		CB99E03E1FB0E1CE00C4F3E9 /* ClosureViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureViewController.swift; sourceTree = "<group>"; };
 		CB99E0401FB0E73E00C4F3E9 /* Closure.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Closure.entitlements; sourceTree = "<group>"; };
-		CBCAFA931FA8D60600015551 /* Closure-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Closure-Bridging-Header.h"; sourceTree = "<group>"; };
-		CBCAFA941FA8D60700015551 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
-		CBCAFA951FA8D60700015551 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
-		CBD4BC6E1FAB79FA001FBBA2 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		CBC681501FFC214200B8EBA3 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBC681511FFC214200B8EBA3 /* MBProgressHUD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MBProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CBD114001FF4313E00828E7E /* closeRed17.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = closeRed17.png; path = ClosureImages/closeRed17.png; sourceTree = "<group>"; };
 		CBE036331FAA0E7F001E496C /* menu.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = menu.png; sourceTree = "<group>"; };
 		CBE036341FAA0E7F001E496C /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
 		CBE036351FAA0E7F001E496C /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@3x.png"; sourceTree = "<group>"; };
+		CBE3B4471FE9AF3B00AF6672 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +79,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CBC6814E1FFC214200B8EBA3 /* Alamofire.framework in Frameworks */,
+				CBC6814F1FFC214200B8EBA3 /* MBProgressHUD.framework in Frameworks */,
+				CBE3B4481FE9AF3B00AF6672 /* CoreLocation.framework in Frameworks */,
 				F239065A044646CE03CBF4CF /* Pods_Closure.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -76,6 +92,9 @@
 		50CD643D80D45F5A1D77E9A2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CBC681501FFC214200B8EBA3 /* Alamofire.framework */,
+				CBC681511FFC214200B8EBA3 /* MBProgressHUD.framework */,
+				CBE3B4471FE9AF3B00AF6672 /* CoreLocation.framework */,
 				AC2B31EEC2CC7D8890537F50 /* Pods_Closure.framework */,
 			);
 			name = Frameworks;
@@ -84,6 +103,8 @@
 		CB0ECCA01FA239EB00DC6E94 = {
 			isa = PBXGroup;
 			children = (
+				CB91F4461FE46ABE00063BD1 /* SWRevealViewController.h */,
+				CB91F4471FE46ABE00063BD1 /* SWRevealViewController.m */,
 				CB83106F1FA3C2E400E6A4C6 /* README */,
 				CB0ECCAB1FA239EB00DC6E94 /* Closure */,
 				CB0ECCAA1FA239EB00DC6E94 /* Products */,
@@ -104,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				CB99E0401FB0E73E00C4F3E9 /* Closure.entitlements */,
-				CBCAFA921FA8D5EB00015551 /* SWRevealVC */,
 				CB83106C1FA3853500E6A4C6 /* images */,
 				CB3FF37F1FA26D1000608F5D /* API */,
 				CB0ECCCB1FA2622800DC6E94 /* supporting */,
@@ -141,7 +161,6 @@
 				CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */,
 				CB99E03E1FB0E1CE00C4F3E9 /* ClosureViewController.swift */,
 				CB0ECCC91FA23EC300DC6E94 /* StepOne.swift */,
-				CBD4BC6E1FAB79FA001FBBA2 /* SettingsViewController.swift */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -165,6 +184,11 @@
 		CB83106C1FA3853500E6A4C6 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CB6FD3732000202900E30FEC /* seattle_splash1.png */,
+				CBD114001FF4313E00828E7E /* closeRed17.png */,
+				CB1710951FEBF21600B79184 /* searchBarWhite.png */,
+				CB0F05751FE994D000690F33 /* leftarroworange.png */,
+				CB0F05731FE9907500690F33 /* left-arrow.png */,
 				CB6483791FC85F5800141D1E /* closeRed24.png */,
 				CB64837A1FC85F5800141D1E /* openGreen24.png */,
 				CBE036331FAA0E7F001E496C /* menu.png */,
@@ -174,16 +198,6 @@
 				CB83106D1FA3854400E6A4C6 /* scotty.jpg */,
 			);
 			name = images;
-			sourceTree = "<group>";
-		};
-		CBCAFA921FA8D5EB00015551 /* SWRevealVC */ = {
-			isa = PBXGroup;
-			children = (
-				CBCAFA941FA8D60700015551 /* SWRevealViewController.h */,
-				CBCAFA951FA8D60700015551 /* SWRevealViewController.m */,
-				CBCAFA931FA8D60600015551 /* Closure-Bridging-Header.h */,
-			);
-			name = SWRevealVC;
 			sourceTree = "<group>";
 		};
 		E573968C0EAC52D5DD49EB38 /* Pods */ = {
@@ -267,11 +281,16 @@
 				CB64837B1FC85F5800141D1E /* closeRed24.png in Resources */,
 				CB8310701FA3C2E400E6A4C6 /* README in Resources */,
 				CBE036371FAA0E7F001E496C /* menu@2x.png in Resources */,
+				CB6FD3742000202A00E30FEC /* seattle_splash1.png in Resources */,
+				CB1710961FEBF21600B79184 /* searchBarWhite.png in Resources */,
 				CB64837C1FC85F5800141D1E /* openGreen24.png in Resources */,
+				CBD114011FF4313E00828E7E /* closeRed17.png in Resources */,
 				CB0ECCBB1FA239EB00DC6E94 /* LaunchScreen.storyboard in Resources */,
 				CB0ECCB81FA239EB00DC6E94 /* Assets.xcassets in Resources */,
 				CB0F7BF01FAA4A35001EBFE1 /* Main.storyboard in Resources */,
+				CB0F05761FE994D000690F33 /* leftarroworange.png in Resources */,
 				CBE036381FAA0E7F001E496C /* menu@3x.png in Resources */,
+				CB0F05741FE9907500690F33 /* left-arrow.png in Resources */,
 				CB2E760C1FA8EFA9001845A4 /* settings.png in Resources */,
 				CBE036361FAA0E7F001E496C /* menu.png in Resources */,
 				CB83106E1FA3854400E6A4C6 /* scotty.jpg in Resources */,
@@ -287,9 +306,13 @@
 			files = (
 			);
 			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-Closure/Pods-Closure-resources.sh",
+				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
+				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -342,10 +365,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CB0ECCAD1FA239EB00DC6E94 /* AppDelegate.swift in Sources */,
-				CBD4BC6F1FAB79FA001FBBA2 /* SettingsViewController.swift in Sources */,
 				CB3FF3811FA26D3400608F5D /* LibraryAPI.swift in Sources */,
 				CB99E03F1FB0E1CE00C4F3E9 /* ClosureViewController.swift in Sources */,
-				CBCAFA961FA8D60700015551 /* SWRevealViewController.m in Sources */,
+				CB91F4481FE46ABE00063BD1 /* SWRevealViewController.m in Sources */,
 				CB0ECCCA1FA23EC300DC6E94 /* StepOne.swift in Sources */,
 				CB4A123A1FBA1269004CA195 /* CityDetailPageVC.swift in Sources */,
 				CB3FF3831FA26D6700608F5D /* CityStatus.swift in Sources */,
@@ -469,12 +491,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Closure/Closure.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2A98R2A7E3;
 				INFOPLIST_FILE = Closure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tehillim.ClosureNotifier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Closure/Closure-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
@@ -488,12 +514,16 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Closure/Closure.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2A98R2A7E3;
 				INFOPLIST_FILE = Closure/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.tehillim.ClosureNotifier;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Closure/Closure-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
 			};
