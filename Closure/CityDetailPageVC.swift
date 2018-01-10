@@ -15,7 +15,7 @@ let DOLGREENCOLOR = 0x7ED321    //0x2E8540
 let DOLWHITECOLOR = 0xFFFFFF
 let DOLROBOTOLIGHTCOLOR = 0x030303
 let DOLORANGECOLOR = 0xFD5739
-
+let DOLBLACKCOLOR = 0x000000
 
 class CityDetailPageVC: UIViewController {
     
@@ -70,7 +70,7 @@ class CityDetailPageVC: UIViewController {
             cityStatusLabel.text = "Closed"
         }
         
-        cityStatusLabel.textColor = UIColor(rgb: DOLWHITECOLOR)
+        cityStatusLabel.textColor = UIColor(rgb: DOLBLACKCOLOR)
         cityStatusLabel.backgroundColor = UIColor(rgb: DOLGREENCOLOR)
         cityStatusLabel.layer.cornerRadius = 50
         

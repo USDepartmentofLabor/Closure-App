@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CB0E2084200674DE00B02891 /* EmailerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0E2083200674DD00B02891 /* EmailerViewController.swift */; };
 		CB0ECCAD1FA239EB00DC6E94 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0ECCAC1FA239EB00DC6E94 /* AppDelegate.swift */; };
 		CB0ECCB81FA239EB00DC6E94 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB0ECCB71FA239EB00DC6E94 /* Assets.xcassets */; };
 		CB0ECCBB1FA239EB00DC6E94 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CB0ECCB91FA239EB00DC6E94 /* LaunchScreen.storyboard */; };
@@ -41,6 +42,7 @@
 		4B6474A827EB1B75CB05CC10 /* Pods-Closure.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closure.release.xcconfig"; path = "Pods/Target Support Files/Pods-Closure/Pods-Closure.release.xcconfig"; sourceTree = "<group>"; };
 		AC2B31EEC2CC7D8890537F50 /* Pods_Closure.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Closure.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0ADCCF90455C71572340771 /* Pods-Closure.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Closure.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Closure/Pods-Closure.debug.xcconfig"; sourceTree = "<group>"; };
+		CB0E2083200674DD00B02891 /* EmailerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailerViewController.swift; sourceTree = "<group>"; };
 		CB0ECCA91FA239EB00DC6E94 /* Closure.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Closure.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB0ECCAC1FA239EB00DC6E94 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CB0ECCB71FA239EB00DC6E94 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 		CB0ECCC61FA23D7C00DC6E94 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CB0E2083200674DD00B02891 /* EmailerViewController.swift */,
 				CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */,
 				CB99E03E1FB0E1CE00C4F3E9 /* ClosureViewController.swift */,
 				CB0ECCC91FA23EC300DC6E94 /* StepOne.swift */,
@@ -370,6 +373,7 @@
 				CB91F4481FE46ABE00063BD1 /* SWRevealViewController.m in Sources */,
 				CB0ECCCA1FA23EC300DC6E94 /* StepOne.swift in Sources */,
 				CB4A123A1FBA1269004CA195 /* CityDetailPageVC.swift in Sources */,
+				CB0E2084200674DE00B02891 /* EmailerViewController.swift in Sources */,
 				CB3FF3831FA26D6700608F5D /* CityStatus.swift in Sources */,
 				CB0ECCCD1FA2625300DC6E94 /* HelperLibrary.swift in Sources */,
 			);

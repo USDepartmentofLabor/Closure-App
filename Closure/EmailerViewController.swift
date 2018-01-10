@@ -22,16 +22,7 @@ class EmailerViewController: UIViewController, MFMailComposeViewControllerDelega
         }
     }
     
-    
-    @IBAction func sendEmailButtonTapped(sender: AnyObject) {
-        let mailComposeViewController = configuredMailComposeViewController()
-        if MFMailComposeViewController.canSendMail() {
-            self.present(mailComposeViewController, animated: true, completion: nil)
-        } else {
-            self.showSendMailErrorAlert()
-        }
-    }
-    
+
     func configuredMailComposeViewController() -> MFMailComposeViewController {
         let mailComposerVC = MFMailComposeViewController()
         mailComposerVC.mailComposeDelegate = self as! MFMailComposeViewControllerDelegate // Extremely important to set the --mailComposeDelegate-- property, NOT the --delegate-- property
@@ -40,7 +31,7 @@ class EmailerViewController: UIViewController, MFMailComposeViewControllerDelega
         
         print("\nEMAILERVC: TOKEN: ", deviceToken)
         
-        mailComposerVC.setToRecipients(["liu.george.p@dol.gov"])
+        mailComposerVC.setToRecipients(["george.liu@hotmail.com"])
         mailComposerVC.setSubject("Sending you an in-app e-mail...")
         mailComposerVC.setMessageBody(deviceToken, isHTML: false)
         

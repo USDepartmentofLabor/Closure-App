@@ -110,6 +110,37 @@
             </objects>
             <point key="canvasLocation" x="2920.8000000000002" y="305.39730134932535"/>
         </scene>
+        <!--Emailer View Controller-->
+        <scene sceneID="7dZ-Sg-fcR">
+            <objects>
+                <viewController id="TXH-yr-lWg" customClass="EmailerViewController" customModule="Closure" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="w5v-rN-1sV"/>
+                        <viewControllerLayoutGuide type="bottom" id="3jn-hk-gfY"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xkH-zS-kCL">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E2v-VL-gkd">
+                                <rect key="frame" x="103" y="124" width="167" height="79"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="26"/>
+                                <state key="normal" title="Email Token">
+                                    <color key="titleShadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sendEmailButtonTouched:" destination="TXH-yr-lWg" eventType="touchUpInside" id="DbA-bT-PV1"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kxO-uS-OA8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1711.2" y="-1318.2908545727137"/>
+        </scene>
         <!--Closure View Controller-->
         <scene sceneID="cKc-l5-ujr">
             <objects>

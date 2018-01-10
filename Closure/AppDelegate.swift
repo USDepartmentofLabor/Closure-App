@@ -48,7 +48,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             guard settings.authorizationStatus == .authorized else { return }
-            UIApplication.shared.registerForRemoteNotifications()
+            
+            DispatchQueue.main.async {
+                UIApplication.shared.registerForRemoteNotifications()
+            }
+//            UIApplication.shared.registerForRemoteNotifications()
         }
     }
     
