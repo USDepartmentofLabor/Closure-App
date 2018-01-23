@@ -24,6 +24,8 @@ class ClosureViewController: UIViewController {
 
     //MARK: - data management
     //MARK: Properties
+    var cityListJsonArray: [Any] = []       // short list city stuff
+    var cityStateCodeList: [String] = []
     
     var cityStatuses = [CityStatus]()
     var cityStatusesShortList = [CityStatus]()
@@ -35,6 +37,8 @@ class ClosureViewController: UIViewController {
     var citySubscriptionSet = Set<String>()     // TODO: Put this into a SINGLETON cuz other classes will need it.
 
     let NOCITYSUBSCRIPTIONS = 0
+    
+    var refreshControl: UIRefreshControl!
     
     @IBAction func addCityButtonPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -51,6 +55,9 @@ class ClosureViewController: UIViewController {
 
     
     private func loadCityStatusesFromMtws() {
+        
+        print(">>> loadCityStatusesFromMtws")
+        
         // pulls city statuses from Nick's server
         var myUrl =  LibraryAPI.sharedInstance.getDolStagingGetCityStatusesBase() as String
         var cityNamesHash = [String: String]()          // hash of cityname and cityid for all cities
@@ -91,9 +98,7 @@ class ClosureViewController: UIViewController {
         let subscriptionParam = deviceToken + "/" + formattedArray
         myUrl += subscriptionParam
         
-        
-        //////////////////////////////////////////////////////////////////////////////////////
-        
+        //////////////////////////////////////////////////////////////////////////////////////        
         self.cityStatuses.removeAll()
         
             self.showLoadingHUD()
@@ -114,7 +119,7 @@ class ClosureViewController: UIViewController {
                         if let jsonArray = try? JSONSerialization.jsonObject(with: response.data!, options: []) as? NSArray {
                             
                             for updateDictionary in jsonArray! {
-                                                
+                                
                                 let ud = updateDictionary as! NSDictionary
                             
                                 let dictionary = ud["update"] as? [String:String]
@@ -139,7 +144,12 @@ class ClosureViewController: UIViewController {
                                 }
                                 else {
                                     cityStatusNamesSet.insert(city! + " " + state!)
-                                    let cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
+                                    
+                                    let cityStateCode = city! + " " + state!
+                                    var cs3 = CityStatus(region: "", state: state!, cityName: city!, cityStatus: "Open", cityNotes: "Open", updatedOn: updatedOn ?? "" )
+                                    if (self.citySubscriptionSet.contains(cityStateCode)) {
+                                        cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
+                                    }
                                     self.cityStatuses.append(cs3)
                                 }
                             }   // end for
@@ -159,13 +169,6 @@ class ClosureViewController: UIViewController {
                          ** NEED TO NOTIFY USER
                          */
                         print(error)
-//                        let message = "Unable to get City status. Please try again later."
-//                        if (statusCode == nil) {
-//                            message = message + "Server not responding."
-//                        }
-//                        else {
-//                            message = message + "Status code: \(String(describing: statusCode))"
-//                        }
                     
                         let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -179,13 +182,6 @@ class ClosureViewController: UIViewController {
                     self.hideLoadingHUD()
                     
                     let message = "Unable to get City status. Please try again later."
-//                    if (statusCode == nil) {
-//                        message = message + "Server not responding."
-//                    }
-//                    else {
-//                        message = message + "Status code: \(String(describing: statusCode))"
-//                    }
-                    
                     let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
@@ -201,6 +197,11 @@ class ClosureViewController: UIViewController {
         view.endEditing(true)
     }
     
+    func refresh() {
+        print("\n\nREFRESH")
+        self.loadCityStatusesFromMtws()
+        refreshControl.endRefreshing()
+    }
     
     ///////////////////////////////////////////////////////////////////////////////
     //MARK: - view cycle methods
@@ -211,10 +212,14 @@ class ClosureViewController: UIViewController {
             menuButton.target = self.revealViewController()
             menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
         }
+    
+        refreshControl = UIRefreshControl()
+        refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        self.closureTableView.addSubview(refreshControl) // not required when using UITableViewController
     }      // end viewdidload
 
     override func viewWillAppear(_ animated: Bool) {
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -230,7 +235,7 @@ class ClosureViewController: UIViewController {
         if (LibraryAPI.sharedInstance.getSubscriptionCityCount() != self.NOCITYSUBSCRIPTIONS) {
             // means subsequent run (and you have saved cities)
             self.loadCityStatusesFromMtws()
-        }
+       }
         else {
 
             let runState = LibraryAPI.sharedInstance.getRunStatus()
@@ -257,7 +262,6 @@ class ClosureViewController: UIViewController {
     private func hideLoadingHUD() {
         MBProgressHUD.hide(for: self.view, animated: true)
     }
-
 }   // end class
 
 

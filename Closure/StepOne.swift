@@ -405,7 +405,7 @@ class StepOne : UIViewController {
     
     
     ///////////////////////////////////////////////////////////////////
-    //MARK: API ENDPOINT OPS
+    //MARK: API ENDPOINT OPS    
     func readCityListFromMtws() {
         showLoadingHUD()
 
