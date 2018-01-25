@@ -12,10 +12,7 @@ import UIKit
 let INITIALSETTINGRUNSTATE = "INITIALSETTINGRUNSTATE"
 let NORMALRUNSTATE = "NORMALRUNSTATE"
 
-//class LibraryAPI: NSObject {
-
 class LibraryAPI: NSObject {
-
     
     private let defaults = UserDefaults.standard
     

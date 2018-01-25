@@ -64,6 +64,8 @@ class ClosureViewController: UIViewController {
         var cityNamesIdHash = [String: String]()        // hash of cityname and cityid for preselected citiex
         var workingHash = [String: String]()
         
+        var cityStatusDictionary = [String: CityStatus]()
+        
         var cityIDs = [String]()
         var cityIntIDs = [Int]()
         let deviceToken = LibraryAPI.sharedInstance.getDeviceToken()
@@ -89,10 +91,24 @@ class ClosureViewController: UIViewController {
         workingHash = LibraryAPI.sharedInstance.getMasterCityNameIdHash()
         
         ////////////  FORMAT URL - GET DEVICE TOKEN AND CITY IDs FROM LibraryAPI //////////
+        
+        self.cityStatuses.removeAll()
+        
+
         for item in citySubscriptionSet {
             let cityID = workingHash[item]
             cityIDs.append(cityID!)
-        }
+            
+            /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
+            let formattedArray = item.components(separatedBy: " ")
+            let city = formattedArray[0]
+            let state = formattedArray[1]
+            
+            let cs3 = CityStatus(region: "", state: state, cityName: city, cityStatus: "Open", cityNotes: "Open", updatedOn: "" )
+            cityStatusDictionary[item] = cs3
+            /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
+
+        }   // end for item in citySubscriptionSet
         
         let formattedArray = (cityIDs.map{String($0)}).joined(separator: ",")
         let subscriptionParam = deviceToken + "/" + formattedArray
@@ -121,7 +137,7 @@ class ClosureViewController: UIViewController {
                             for updateDictionary in jsonArray! {
                                 
                                 let ud = updateDictionary as! NSDictionary
-                            
+                                
                                 let dictionary = ud["update"] as? [String:String]
  
                                 let state = (dictionary as AnyObject).value(forKey: "state") as? String
@@ -146,14 +162,19 @@ class ClosureViewController: UIViewController {
                                     cityStatusNamesSet.insert(city! + " " + state!)
                                     
                                     let cityStateCode = city! + " " + state!
-                                    var cs3 = CityStatus(region: "", state: state!, cityName: city!, cityStatus: "Open", cityNotes: "Open", updatedOn: updatedOn ?? "" )
-                                    if (self.citySubscriptionSet.contains(cityStateCode)) {
-                                        cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
-                                    }
-                                    self.cityStatuses.append(cs3)
+                                    let cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
+                                    
+                                    cityStatusDictionary[cityStateCode] = cs3
+                                    
+//                                    self.cityStatuses.append(cs3)
                                 }
                             }   // end for
                     
+                            self.cityStatuses.removeAll()
+                            for item in cityStatusDictionary {
+                                self.cityStatuses.append(item.value)
+                            }
+                            
                         }   // end if NSDictionary
                     
                         // 2. prep for data table load
