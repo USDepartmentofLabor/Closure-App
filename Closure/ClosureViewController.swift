@@ -9,6 +9,8 @@ import UIKit
 import Alamofire
 import MBProgressHUD
 
+let applicationDidBecomeActiveNSKey = "gov.dol.oasam.applicationDidBecomeActive"
+
 
 class ClosureViewController: UIViewController {
     
@@ -40,6 +42,8 @@ class ClosureViewController: UIViewController {
     
     var refreshControl: UIRefreshControl!
     
+//    var isRefreshCalled = false
+    
     @IBAction func addCityButtonPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "selectCitiesNavVC") as UIViewController
@@ -56,7 +60,7 @@ class ClosureViewController: UIViewController {
     
     private func loadCityStatusesFromMtws() {
         
-        print(">>> loadCityStatusesFromMtws")
+        print("\nCLOSUREVC: loadCityStatusesFromMtws")
         
         // pulls city statuses from Nick's server
         var myUrl =  LibraryAPI.sharedInstance.getDolStagingGetCityStatusesBase() as String
@@ -81,6 +85,7 @@ class ClosureViewController: UIViewController {
         cityIDs.removeAll()
         cityIntIDs.removeAll()
         cityStatusNamesSet.removeAll()
+        cityStatuses.removeAll()
         
         self.citySubscriptionSet.removeAll()
         
@@ -91,20 +96,33 @@ class ClosureViewController: UIViewController {
         workingHash = LibraryAPI.sharedInstance.getMasterCityNameIdHash()
         
         ////////////  FORMAT URL - GET DEVICE TOKEN AND CITY IDs FROM LibraryAPI //////////
-        
         self.cityStatuses.removeAll()
         
-
+        print("\nCLOSUREVC: loadCityStatusesFromMtws: citySubscriptionSet: ", citySubscriptionSet)
         for item in citySubscriptionSet {
             let cityID = workingHash[item]
             cityIDs.append(cityID!)
             
             /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
             let formattedArray = item.components(separatedBy: " ")
-            let city = formattedArray[0]
-            let state = formattedArray[1]
+            // handle multi named city
+            let count = formattedArray.count
+            var cntr = 1
+            var bigCity = String()
+            for dot in formattedArray {
+                bigCity += dot
+                cntr += 1
+                if (cntr == count) {
+                    break
+                }
+                else {
+                    bigCity += " "
+                }
+            }
+            let state = formattedArray[count-1]
+
             
-            let cs3 = CityStatus(region: "", state: state, cityName: city, cityStatus: "Open", cityNotes: "Open", updatedOn: "" )
+            let cs3 = CityStatus(region: "", state: state, cityName: bigCity, cityStatus: "Open", cityNotes: "Open", updatedOn: "" )
             cityStatusDictionary[item] = cs3
             /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
 
@@ -114,6 +132,8 @@ class ClosureViewController: UIViewController {
         let subscriptionParam = deviceToken + "/" + formattedArray
         myUrl += subscriptionParam
         
+        print("CLOSUREVC: loadCityStatusesFromMtws: MYURL REQUEST: ", myUrl)
+
         //////////////////////////////////////////////////////////////////////////////////////        
         self.cityStatuses.removeAll()
         
@@ -123,6 +143,8 @@ class ClosureViewController: UIViewController {
         
             Alamofire.request(myUrl, method: .get, parameters: nil, encoding: JSONEncoding.default).responseJSON { response in
                 let statusCode = response.response?.statusCode
+                
+                print("CLOSUREVC: loadCityStatusesFromMtws: ALAMOFIRE statusCode: ", statusCode)
                 
                 if (statusCode == 200) {
                 
@@ -139,7 +161,9 @@ class ClosureViewController: UIViewController {
                                 let ud = updateDictionary as! NSDictionary
                                 
                                 let dictionary = ud["update"] as? [String:String]
- 
+                                
+                                print("CLOSUREVC: loadCityStatusesFromMtws: UPDATEDICTIONARY RESPONSE FROM SERVER: \(dictionary) \n\n")
+                                
                                 let state = (dictionary as AnyObject).value(forKey: "state") as? String
                             
                                 let region = (dictionary as AnyObject).value(forKey: "region") as? String
@@ -189,8 +213,6 @@ class ClosureViewController: UIViewController {
                         /*
                          ** NEED TO NOTIFY USER
                          */
-                        print(error)
-                    
                         let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                         self.present(alert, animated: true, completion: nil)
@@ -201,8 +223,6 @@ class ClosureViewController: UIViewController {
                 }   // end status == 200
                 else {
                     self.hideLoadingHUD()
-                    
-                    let message = "Unable to get City status. Please try again later."
                     let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
@@ -219,7 +239,8 @@ class ClosureViewController: UIViewController {
     }
     
     func refresh() {
-        print("\n\nREFRESH")
+        let timeStamp = NSDate()
+        print("\n\n*****************************\nCLOSUREVC: REFRESH at: ", timeStamp)
         self.loadCityStatusesFromMtws()
         refreshControl.endRefreshing()
     }
@@ -238,13 +259,20 @@ class ClosureViewController: UIViewController {
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
         refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
         self.closureTableView.addSubview(refreshControl) // not required when using UITableViewController
+        
+ 
+        
     }      // end viewdidload
 
     override func viewWillAppear(_ animated: Bool) {
+//        NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        print("\nCLOSUREVC: viewDidAppear")
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        
         
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         tap.cancelsTouchesInView = false
@@ -252,10 +280,14 @@ class ClosureViewController: UIViewController {
         
         self.addCityButton.tintColor = UIColor(rgb: DOLORANGECOLOR)
 
+        
         // at this point the view is created and added to the hierarchy
         if (LibraryAPI.sharedInstance.getSubscriptionCityCount() != self.NOCITYSUBSCRIPTIONS) {
             // means subsequent run (and you have saved cities)
             self.loadCityStatusesFromMtws()
+
+            NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
+
        }
         else {
 
@@ -338,6 +370,9 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
         let cityStatusCell = cityStatuses[indexPath.row]
         citySubscriptionSet.remove(cityStatusCell.cityName+" "+cityStatusCell.state)
         LibraryAPI.sharedInstance.setSubscriptionCitySetWith(citySubscriptionSet: citySubscriptionSet)
+        
+        print("CLOSUREVC: editingStyle: CITYSTATE: ", cityStatusCell.cityName+" "+cityStatusCell.state)
+        print("CLOSUREVC: editingStyle: CITYSUBSCRIPTIONSET: ", citySubscriptionSet)
         
         if editingStyle == .delete {
             cityStatuses.remove(at: indexPath.row)

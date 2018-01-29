@@ -21,9 +21,6 @@ let listBySTATES = 1
 let listByREGION = 2
 
 var scopeIndex = 0
-//var statesArray = [String]()
-//var cityStates = [[String]]()
-
 
 
 class StepOne : UIViewController {
@@ -48,80 +45,76 @@ class StepOne : UIViewController {
         
         cityNamesHash = LibraryAPI.sharedInstance.getMasterCityNameHash()
         
-        
-        // build an array of string city_ids like: "city_ids": ["", "1", "2", "3", "4", "5"]
-        
-        for item in citySubscriptionSet {
-            cityIDs.append(cityNamesHash[item]!)
-            cityIntIDs.append(Int(cityNamesHash[item]!)!)
-            
-            cityNamesIdHash[item] = cityNamesHash[item]
+        if (citySubscriptionSet.count == 0) {
+            let alert = UIAlertController(title: "Cannot create subscription list.", message: "Please select one or more cities.", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
-        
-        LibraryAPI.sharedInstance.setMasterCityNameIdHashWith(cityNameIdHash: cityNamesIdHash)
-        
-        LibraryAPI.sharedInstance.setSubscriptionCitySetWith(citySubscriptionSet: citySubscriptionSet)
-
-                
-        let myDeviceToken = LibraryAPI.sharedInstance.getDeviceToken()
-        
-        //      Example:    https://staging.dol.gov/api/v1/CreateSubscriptionList/old-asdfasdf/7767,77675
-        
-        let formattedArray = (cityIntIDs.map{String($0)}).joined(separator: ",")
-        let subscriptionParam = myDeviceToken + "/" + formattedArray
-        
-        // build json document with device id and cities
-        // let jsonObject = [ "device": ["token": myDeviceToken, "city_ids": ["", "1", "2", "3", "4", "5"]] ]
-        
-        let jsonObject = [ "device": ["token": myDeviceToken, "city_ids": cityIDs] ]
-        
-        var myUrl =  LibraryAPI.sharedInstance.getDolStagingCreateSubscriptionListBase() as String
-        
-        myUrl += subscriptionParam
-                        
-        showLoadingHUD()
-        
-        Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 15
-        
-        Alamofire.request(myUrl, method: .post, parameters: jsonObject, encoding: JSONEncoding.default).responseString { response in
-          
-            let statusCode = response.response?.statusCode
+        else {
+            // build an array of string city_ids like: "city_ids": ["", "1", "2", "3", "4", "5"]
+            for item in citySubscriptionSet {
+                cityIDs.append(cityNamesHash[item]!)
+                cityIntIDs.append(Int(cityNamesHash[item]!)!)
             
-            if (statusCode == 200) {
+                cityNamesIdHash[item] = cityNamesHash[item]
+            }
+        
+            LibraryAPI.sharedInstance.setMasterCityNameIdHashWith(cityNameIdHash: cityNamesIdHash)
+            LibraryAPI.sharedInstance.setSubscriptionCitySetWith(citySubscriptionSet: citySubscriptionSet)
 
-                switch response.result {
-                
-                case .success:
-                    self.hideLoadingHUD()
-                    self.noop()
+            let myDeviceToken = LibraryAPI.sharedInstance.getDeviceToken()
+        
+            //      Example:    https://staging.dol.gov/api/v1/CreateSubscriptionList/old-asdfasdf/7767,77675
+        
+            let formattedArray = (cityIntIDs.map{String($0)}).joined(separator: ",")
+            let subscriptionParam = myDeviceToken + "/" + formattedArray
+        
+            // build json document with device id and cities
+            // let jsonObject = [ "device": ["token": myDeviceToken, "city_ids": ["", "1", "2", "3", "4", "5"]] ]
+        
+            let jsonObject = [ "device": ["token": myDeviceToken, "city_ids": cityIDs] ]
+        
+            var myUrl =  LibraryAPI.sharedInstance.getDolStagingCreateSubscriptionListBase() as String
+            myUrl += subscriptionParam
+            
+            showLoadingHUD()
+        
+            Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 15
+        
+            Alamofire.request(myUrl, method: .post, parameters: jsonObject, encoding: JSONEncoding.default).responseString { response in
+                let statusCode = response.response?.statusCode
+                if (statusCode == 200) {
+                    switch response.result {
+                    case .success:
+                        self.hideLoadingHUD()
+                        self.noop()
                     
-                case .failure( _):
+                    case .failure( _):
+                        self.hideLoadingHUD()
+                        let alert = UIAlertController(title: "Cannot create subscription list.", message: "No internet connection available.", preferredStyle:  UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                    }   // end switch
+                }   // end status == 200
+                else {
                     self.hideLoadingHUD()
+                
+                    var message = "Cannot create subscription list. "
+                    if (statusCode == nil) {
+                        message = message + "Server not responding."
+                    }
+                    else {
+                        message = message + "Status code: \(String(describing: statusCode))"
+                    }
+                
                     let alert = UIAlertController(title: "Cannot create subscription list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                     alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
-                    
-                }   // end switch
-            }   // end status == 200
-            else {
-                self.hideLoadingHUD()
-                
-                var message = "Cannot create subscription list. "
-                if (statusCode == nil) {
-                    message = message + "Server not responding."
                 }
-                else {
-                    message = message + "Status code: \(String(describing: statusCode))"
-                }
-                
-                let alert = UIAlertController(title: "Cannot create subscription list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
-                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-            }
-        }   // end Alamorefire
+            }   // end Alamorefire
+        }   // if citysubscriptinseg == 0
     }   // end doneButtonPressed
     
- 
     var cityNamesList: [String] = []
     var cityNamesStateList: [String] = []
     var cityNamesRegionList: [String] = []
@@ -151,7 +144,6 @@ class StepOne : UIViewController {
     var regionFilterUniqueFirstCharacterArray = [String]()
     var regionIndexToSectionDictionary = Dictionary<String, Int>()
     
-    
     var indexList = [String]()
     
     @IBOutlet weak var stepOneSearchBar: UISearchBar!
@@ -162,8 +154,7 @@ class StepOne : UIViewController {
     let BYREGION = 2
     
     @IBOutlet weak var stepOneSegmentControl: UISegmentedControl!
-    
-    
+
     @IBAction func indexChanged(_ sender: UISegmentedControl) {
         scopeIndex = stepOneSegmentControl.selectedSegmentIndex
         
@@ -175,12 +166,8 @@ class StepOne : UIViewController {
         default:
             stepOneSearchBar.placeholder = "Please enter a Region name."
         }
-        
-        
         self.stepOneTableView!.reloadData()
     }
-
-
     
     var citiesSubscriptionSearchResultsList: [String] = []
     var statesSubscriptionSearchResultsList: [String] = []
@@ -553,7 +540,7 @@ class StepOne : UIViewController {
                 self.hideLoadingHUD()
                 self.doneButton.isEnabled = false
             
-                let message = "Unable to get City status. Please try again later."
+//                let message = "Unable to get City status. Please try again later."
 //                if (statusCode == nil) {
 //                    message = message + "Server not responding."
 //                }
