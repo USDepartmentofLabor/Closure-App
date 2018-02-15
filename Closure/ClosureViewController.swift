@@ -11,6 +11,9 @@ import MBProgressHUD
 
 let applicationDidBecomeActiveNSKey = "gov.dol.oasam.applicationDidBecomeActive"
 
+let loadCityStatusesFromMtwsSuccessNSKey = "gov.dol.oasam.loadCityStatusesFromMtwsSuccess"
+let loadCityStatusesFromMtwsFailureNSKey = "gov.dol.oasam.loadCityStatusesFromMtwsFailure"
+
 
 class ClosureViewController: UIViewController {
     
@@ -37,12 +40,8 @@ class ClosureViewController: UIViewController {
     
     var deviceTokens: [String] = []
     var citySubscriptionSet = Set<String>()     // TODO: Put this into a SINGLETON cuz other classes will need it.
-
     let NOCITYSUBSCRIPTIONS = 0
-    
     var refreshControl: UIRefreshControl!
-    
-//    var isRefreshCalled = false
     
     @IBAction func addCityButtonPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -57,11 +56,23 @@ class ClosureViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
 
-    
     private func loadCityStatusesFromMtws() {
-        
-        print("\nCLOSUREVC: loadCityStatusesFromMtws")
-        
+        if (LibraryAPI.sharedInstance.isInternetAvailable() == true) {
+            self.loadCityStatusesFromMtwsX()
+        }
+        else {
+            refreshControl.endRefreshing()
+            
+            HelperLibrary.delay( 1, completion: {
+                let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+        }
+    }
+    
+
+    private func loadCityStatusesFromMtwsX() {
         // pulls city statuses from Nick's server
         var myUrl =  LibraryAPI.sharedInstance.getDolStagingGetCityStatusesBase() as String
         var cityNamesHash = [String: String]()          // hash of cityname and cityid for all cities
@@ -97,34 +108,29 @@ class ClosureViewController: UIViewController {
         
         ////////////  FORMAT URL - GET DEVICE TOKEN AND CITY IDs FROM LibraryAPI //////////
         self.cityStatuses.removeAll()
+        self.closureTableView.reloadData()
         
-        print("\nCLOSUREVC: loadCityStatusesFromMtws: citySubscriptionSet: ", citySubscriptionSet)
         for item in citySubscriptionSet {
             let cityID = workingHash[item]
             cityIDs.append(cityID!)
+            let itemCFI = LibraryAPI.sharedInstance.parseCityState(cityState: item)
             
-            /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
-            let formattedArray = item.components(separatedBy: " ")
-            // handle multi named city
-            let count = formattedArray.count
-            var cntr = 1
-            var bigCity = String()
-            for dot in formattedArray {
-                bigCity += dot
-                cntr += 1
-                if (cntr == count) {
-                    break
-                }
-                else {
-                    bigCity += " "
-                }
-            }
-            let state = formattedArray[count-1]
-
             
-            let cs3 = CityStatus(region: "", state: state, cityName: bigCity, cityStatus: "Open", cityNotes: "Open", updatedOn: "" )
+//            let formatter = DateFormatter()
+//            // initially set the format based on your datepicker date
+//            formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//
+//            let myString = formatter.string(from: Date())
+//            // convert your string to date
+//            let yourDate = formatter.date(from: myString)
+//            //then again set the date format whhich type of output you need
+//            formatter.dateFormat = ">  MMMM d, HH:mm:ss"
+//            // again convert your date to string
+//            let myStringafd = formatter.string(from: yourDate!)
+            
+            let cs3 = CityStatus(region: "", state: itemCFI.stateCode, cityName: itemCFI.cityName, cityStatus: "Open", cityNotes: "Open", updatedOn: "" )
+            
             cityStatusDictionary[item] = cs3
-            /******** BEGIN - A TEMPORARY FIX FOR THE SERVER PROBLEM ***************/
 
         }   // end for item in citySubscriptionSet
         
@@ -132,19 +138,17 @@ class ClosureViewController: UIViewController {
         let subscriptionParam = deviceToken + "/" + formattedArray
         myUrl += subscriptionParam
         
-        print("CLOSUREVC: loadCityStatusesFromMtws: MYURL REQUEST: ", myUrl)
-
         //////////////////////////////////////////////////////////////////////////////////////        
         self.cityStatuses.removeAll()
         
-            self.showLoadingHUD()
+//            self.showLoadingHUD()
         
-            Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 15
+            Alamofire.SessionManager.default.session.configuration.timeoutIntervalForRequest = 10
         
-            Alamofire.request(myUrl, method: .get, parameters: nil, encoding: JSONEncoding.default).responseJSON { response in
+//            Alamofire.request(myUrl, method: .get, parameters: nil, encoding: JSONEncoding.default).responseJSON { response in
+        
+        Alamofire.SessionManager.default.requestWithoutCache(myUrl, method: .get, parameters: nil, encoding: JSONEncoding.default).responseJSON { response in
                 let statusCode = response.response?.statusCode
-                
-                print("CLOSUREVC: loadCityStatusesFromMtws: ALAMOFIRE statusCode: ", statusCode)
                 
                 if (statusCode == 200) {
                 
@@ -162,8 +166,6 @@ class ClosureViewController: UIViewController {
                                 
                                 let dictionary = ud["update"] as? [String:String]
                                 
-                                print("CLOSUREVC: loadCityStatusesFromMtws: UPDATEDICTIONARY RESPONSE FROM SERVER: \(dictionary) \n\n")
-                                
                                 let state = (dictionary as AnyObject).value(forKey: "state") as? String
                             
                                 let region = (dictionary as AnyObject).value(forKey: "region") as? String
@@ -174,23 +176,15 @@ class ClosureViewController: UIViewController {
                         
                                 let note = (dictionary as AnyObject).value(forKey: "notes") as? String
                                 
-                                let updatedOn = (dictionary as AnyObject).value(forKey: "updatedOn") as? String
-                                
-                                
-                                if ( city == nil ) {
-                                    let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
-                                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                                    self.present(alert, animated: true, completion: nil)
-                                }
-                                else {
+                                let updatedOn = (dictionary as AnyObject).value(forKey: "updated_on") as? String
+                                                                    
+                                self.hideLoadingHUD()
+                                if ( city != nil ) {
                                     cityStatusNamesSet.insert(city! + " " + state!)
-                                    
                                     let cityStateCode = city! + " " + state!
                                     let cs3 = CityStatus(region: region!, state: state!, cityName: city!, cityStatus: status!, cityNotes: note!, updatedOn: updatedOn ?? "" )
                                     
                                     cityStatusDictionary[cityStateCode] = cs3
-                                    
-//                                    self.cityStatuses.append(cs3)
                                 }
                             }   // end for
                     
@@ -205,27 +199,21 @@ class ClosureViewController: UIViewController {
                         self.closureTableView.delegate = self
                         self.closureTableView.dataSource = self
                         self.closureTableView.backgroundView = nil
-                        
-                        self.closureTableView.reloadData()
-                    
-                    case .failure(let error):
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: loadCityStatusesFromMtwsSuccessNSKey), object: self)
+
+                    case .failure(_):
                         self.hideLoadingHUD()
                         /*
-                         ** NEED TO NOTIFY USER
-                         */
-                        let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                        self.present(alert, animated: true, completion: nil)
+                            ** NEED TO NOTIFY USER
+                            */
+                        NotificationCenter.default.post(name: Notification.Name(rawValue: loadCityStatusesFromMtwsFailureNSKey), object: self)
+
                     }   // end switch
                 
-                    
-                    
                 }   // end status == 200
                 else {
                     self.hideLoadingHUD()
-                    let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
-                    alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
+                    NotificationCenter.default.post(name: Notification.Name(rawValue: loadCityStatusesFromMtwsFailureNSKey), object: self)
                 }
                 
             }   // end Alamorefire
@@ -238,11 +226,26 @@ class ClosureViewController: UIViewController {
         view.endEditing(true)
     }
     
-    func refresh() {
-        let timeStamp = NSDate()
-        print("\n\n*****************************\nCLOSUREVC: REFRESH at: ", timeStamp)
+    func refreshFromPullDown() {
         self.loadCityStatusesFromMtws()
         refreshControl.endRefreshing()
+    }
+    
+    
+    func refreshFromApplicationBecomingActive() {
+        self.showLoadingHUD()
+        self.loadCityStatusesFromMtws()
+    }
+    
+    
+    func handleLoadCityStatusFromMtwsSuccess() {
+        self.closureTableView.reloadData()
+    }
+    
+    func handleLoadCityStatusFromMtwsFailure() {
+        let alert = UIAlertController(title: "Cannot get city status.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     ///////////////////////////////////////////////////////////////////////////////
@@ -255,42 +258,33 @@ class ClosureViewController: UIViewController {
             menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
         }
     
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleLoadCityStatusFromMtwsSuccess), name: NSNotification.Name(rawValue: loadCityStatusesFromMtwsSuccessNSKey), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleLoadCityStatusFromMtwsFailure), name: NSNotification.Name(rawValue: loadCityStatusesFromMtwsFailureNSKey), object: nil)
+        
         refreshControl = UIRefreshControl()
         refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
-        refreshControl.addTarget(self, action: #selector(refresh), for: UIControlEvents.valueChanged)
+        refreshControl.addTarget(self, action: #selector(refreshFromPullDown), for: UIControlEvents.valueChanged)
         self.closureTableView.addSubview(refreshControl) // not required when using UITableViewController
         
- 
-        
+        self.addCityButton.accessibilityLabel = "Navigate to select cities"
     }      // end viewdidload
-
-    override func viewWillAppear(_ animated: Bool) {
-//        NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-    }
     
     override func viewDidAppear(_ animated: Bool) {
-        print("\nCLOSUREVC: viewDidAppear")
-        
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
-        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.hideLoadingHUD))
         
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
-        self.addCityButton.tintColor = UIColor(rgb: DOLORANGECOLOR)
+        self.addCityButton.tintColor = UIColor.black    // (rgb: DOLORANGECOLOR)
 
-        
         // at this point the view is created and added to the hierarchy
         if (LibraryAPI.sharedInstance.getSubscriptionCityCount() != self.NOCITYSUBSCRIPTIONS) {
             // means subsequent run (and you have saved cities)
-            self.loadCityStatusesFromMtws()
-
-            NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
-
+            self.refreshFromApplicationBecomingActive()
+            NotificationCenter.default.addObserver(self, selector: #selector(self.refreshFromApplicationBecomingActive), name: NSNotification.Name.UIApplicationDidBecomeActive, object: nil)
        }
         else {
-
             let runState = LibraryAPI.sharedInstance.getRunStatus()
             if (runState == INITIALSETTINGRUNSTATE) {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -312,7 +306,7 @@ class ClosureViewController: UIViewController {
         hud.label.text = "Loading..."
     }
     
-    private func hideLoadingHUD() {
+    @objc private func hideLoadingHUD() {
         MBProgressHUD.hide(for: self.view, animated: true)
     }
 }   // end class
@@ -331,27 +325,27 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ closureTableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var rows = 0
-        
         rows = cityStatuses.count
-        
         return rows
     }
     
     
-    func tableView(_ closureTableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {        
+    func tableView(_ closureTableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell:UITableViewCell = closureTableView.dequeueReusableCell(withIdentifier: "closureCell")!
         
         let cityStatusCell = cityStatuses[indexPath.row]
 
-        (cell.contentView.viewWithTag(100) as! UILabel).textColor = UIColor(rgb: DOLORANGECOLOR)
+        (cell.contentView.viewWithTag(100) as! UILabel).textColor = UIColor(rgb: DOLBLACKCOLOR)
         (cell.contentView.viewWithTag(100) as! UILabel).text = cityStatusCell.cityName + " " + cityStatusCell.state // as? String
         (cell.contentView.viewWithTag(110) as! UILabel).text = cityStatusCell.cityStatus // as? String
+
+//       (cell.contentView.viewWithTag(200) as! UILabel).text = cityStatusCell.updatedOn // as? String
         
         (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "openGreen24.png")
         if cityStatusCell.cityStatus.lowercased().range(of:"closed") != nil {
             (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "closeRed17.png")
         }
-                
         return cell
     }
 
@@ -370,10 +364,7 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
         let cityStatusCell = cityStatuses[indexPath.row]
         citySubscriptionSet.remove(cityStatusCell.cityName+" "+cityStatusCell.state)
         LibraryAPI.sharedInstance.setSubscriptionCitySetWith(citySubscriptionSet: citySubscriptionSet)
-        
-        print("CLOSUREVC: editingStyle: CITYSTATE: ", cityStatusCell.cityName+" "+cityStatusCell.state)
-        print("CLOSUREVC: editingStyle: CITYSUBSCRIPTIONSET: ", citySubscriptionSet)
-        
+            
         if editingStyle == .delete {
             cityStatuses.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -384,6 +375,29 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
     
 }   // end extension
 
+
+extension Alamofire.SessionManager{
+    @discardableResult
+    open func requestWithoutCache(
+        _ url: URLConvertible,
+        method: HTTPMethod = .get,
+        parameters: Parameters? = nil,
+        encoding: ParameterEncoding = URLEncoding.default,
+        headers: HTTPHeaders? = nil)// also you can add URLRequest.CachePolicy here as parameter
+        -> DataRequest
+    {
+        do {
+            var urlRequest = try URLRequest(url: url, method: method, headers: headers)
+            urlRequest.cachePolicy = .reloadIgnoringCacheData // <<== Cache disabled
+            let encodedURLRequest = try encoding.encode(urlRequest, with: parameters)
+            return request(encodedURLRequest)
+        } catch {
+            // TODO: find a better way to handle error
+            print(error)
+            return request(URLRequest(url: URL(string: "http://example.com/wrong_request")!))
+        }
+    }
+}
 
 
 

@@ -20,6 +20,7 @@ let DOLBLACKCOLOR = 0x000000
 class CityDetailPageVC: UIViewController {
     
     
+    @IBOutlet weak var cityDetailNavBackButton: UIBarButtonItem!
     
     @IBOutlet weak var cityDetailImageView: UIImageView!
     @IBOutlet weak var cityDetailTempLabel: UILabel!
@@ -53,6 +54,8 @@ class CityDetailPageVC: UIViewController {
             menuButton.target = self.revealViewController()
             menuButton.action = #selector(SWRevealViewController.revealToggle(_:))
         }
+        
+        cityDetailNavBackButton.accessibilityLabel = "navigate back to my cities"
     }
     
     override func viewWillAppear(_ animated: Bool) {

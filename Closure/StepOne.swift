@@ -36,7 +36,6 @@ class StepOne : UIViewController {
         var cityIDs = [String]()
         var cityIntIDs = [Int]()
         
-        
         cityNamesHash.removeAll()
         cityNamesIdHash.removeAll()
         
@@ -129,6 +128,8 @@ class StepOne : UIViewController {
     
     var cityListJsonArray: [Any] = []
     
+    var stateCodeToStateDictionary = Dictionary<String, String>()
+    
     var cityFilterDictionary = Dictionary<String, Array<String>>()
     var cityFilterTitleArray = [String]()
     var cityFilterUniqueFirstCharacterArray = [String]()
@@ -157,6 +158,8 @@ class StepOne : UIViewController {
 
     @IBAction func indexChanged(_ sender: UISegmentedControl) {
         scopeIndex = stepOneSegmentControl.selectedSegmentIndex
+        
+        print("STEPONEVC: indexChanged: SCOPEINDEX: ", scopeIndex)
         
         switch (scopeIndex) {
         case BYCITY:
@@ -345,7 +348,9 @@ class StepOne : UIViewController {
             "Oklahoma": [],
             "Oregon": [],
             "Pennsylvania": [],
+            "Puerto Rico": [],
             "Rhode Island": [],
+            "Saipan": [],
             "South Carolina": [],
             "South Dakota": [],
             "Tennessee": [],
@@ -360,6 +365,65 @@ class StepOne : UIViewController {
         ]
     }
 
+    func initialStateCodeToStateDictionary() {
+        stateCodeToStateDictionary = [
+                "AL": "Alabama",
+                "AK": "Alaska",
+                "AZ": "Arizona",
+                "AR": "Arkansas",
+                "CA": "California",
+                "CO": "Colorado",
+                "CT": "Connecticut",
+                "DE": "Delaware",
+                "DC": "District of Columbia",
+                "FL": "Florida",
+                "GA": "Georgia",
+                "GU": "Guam",
+                "HI": "Hawaii",
+                "ID": "Idaho",
+                "IL": "Illinois",
+                "IN": "Indiana",
+                "IA": "Iowa",
+                "KS": "Kansas",
+                "KY": "Kentucky",
+                "LA": "Louisiana",
+                "ME": "Maine",
+                "MD": "Maryland",
+                "MA": "Massachusetts",
+                "MI": "Michigan",
+                "MN": "Minnesota",
+                "MP": "Saipan",
+                "MS": "Mississippi",
+                "MO": "Missouri",
+                "MT": "Montana",
+                "NE": "Nebraska",
+                "NV": "Nevada",
+                "NH": "New Hampshire",
+                "NJ": "New Jersey",
+                "NM": "New Mexico",
+                "NY": "New York",
+                "NC": "North Carolina",
+                "ND": "North Dakota",
+                "OH": "Ohio",
+                "OK": "Oklahoma",
+                "OR": "Oregon",
+                "PA": "Pennsylvania",
+                "PR": "Puerto Rico",
+                "RI": "Rhode Island",
+                "SC": "South Carolina",
+                "SD": "South Dakota",
+                "TN": "Tennessee",
+                "TX": "Texas",
+                "UT": "Utah",
+                "VA": "Virginia",
+                "VT": "Vermont",
+                "WA": "Washington",
+                "WV": "West Virginia",
+                "WI": "Wisconsin",
+                "WY": "Wyoming"
+        ]
+    }
+    
     // don't expect the number of states to change
     func initializeStateIndexToSectionMapping() {
         stateIndexToSectionDictionary = ["A": 0, "C": 4, "D": 7, "F": 9, "G": 10, "H": 12, "I": 13, "K": 17, "L": 19, "M": 20, "N": 28, "O": 36, "P": 39, "R": 40, "S": 41, "T": 43, "U": 45, "V": 46, "W":48]
@@ -386,6 +450,8 @@ class StepOne : UIViewController {
         initializeRegionFilterTitleArray()
         initializeRegionIndexToSectionMapping()
         initializeRegionUniqueFirstCharacterArray()
+        
+        initialStateCodeToStateDictionary()
         
 //        initializeIndexArray()
     }
@@ -429,8 +495,8 @@ class StepOne : UIViewController {
                 
                     for item in self.cityListJsonArray as [Any] {
                         
-                        if let dictionary = item as? [String: Any] {
-
+                        if let dictionary = item as? [String: Any] {                           
+                            
                             var city = "NOCITY"
                             if (!(dictionary["city"] is NSNull)) {
                                 city = dictionary["city"] as! String
@@ -442,7 +508,7 @@ class StepOne : UIViewController {
                             if (dictionary["stateCode"] != nil) {
                                 stateCode = dictionary["stateCode"] as! String
                             }
-                             
+                            
                             var stateName = "NOSTATE"
                             if (dictionary["state"] != nil) {
                                 stateName = dictionary["state"] as! String
@@ -539,14 +605,6 @@ class StepOne : UIViewController {
             else {
                 self.hideLoadingHUD()
                 self.doneButton.isEnabled = false
-            
-//                let message = "Unable to get City status. Please try again later."
-//                if (statusCode == nil) {
-//                    message = message + "Server not responding."
-//                }
-//                else {
-//                    message = message + "Status code: \(String(describing: statusCode))"
-//                }
                 
                 let alert = UIAlertController(title: "Cannot get city list.", message: "No internet connection available.", preferredStyle: UIAlertControllerStyle.alert)
                 alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
@@ -612,7 +670,9 @@ class StepOne : UIViewController {
         
         self.stepOneTableView.allowsMultipleSelectionDuringEditing = true
         self.stepOneTableView.setEditing(true, animated: false)
-
+        self.stepOneTableView.sectionIndexColor = UIColor.black
+        
+        self.doneButton.accessibilityLabel = "Done selecting cities"
     }
 
     func prepStepOneSearchBar() {
@@ -624,10 +684,13 @@ class StepOne : UIViewController {
         
         setSearchBarToWhite()
         
-        let textFieldInsideSearchBar = stepOneSearchBar.value(forKey: "searchField") as? UITextField
+        var textFieldInsideSearchBar = stepOneSearchBar.value(forKey: "searchField") as? UITextField
+        textFieldInsideSearchBar?.textColor = UIColor.black
+        
         let imageV = textFieldInsideSearchBar?.leftView as! UIImageView
         imageV.image = imageV.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-        let fancyMagnifierSwiftColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
+//        let fancyMagnifierSwiftColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
+        let fancyMagnifierSwiftColor = UIColor(red: 0x0, green: 0x0, blue: 0x0)
         imageV.tintColor = fancyMagnifierSwiftColor
         
     }
@@ -635,7 +698,7 @@ class StepOne : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         self.doneButton.isEnabled = false
-        self.doneButton.tintColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
+        self.doneButton.tintColor = UIColor.black   // UIColor(red: 0xFD, green: 0x57, blue: 0x39)
         
         self.cityNamesStateList.removeAll()
         self.cityNamesList.removeAll()
@@ -796,18 +859,35 @@ extension StepOne: UITableViewDataSource {
                 numberOfRowsInSectionCount = (sectionArray?.count)!
             }
             
-                
         case BYSTATE:
+            if (searching == true) {
+                numberOfRowsInSectionCount = self.citiesSubscriptionSearchResultsList.count
+            }
+            else {
             let sectionTitle = self.stateFilterTitleArray[section]
             let sectionArray = self.stateFilterDictionary[sectionTitle]
             numberOfRowsInSectionCount = (sectionArray?.count)!
+            }
+            
         default:            // BYREGION
+            if (searching == true) {
+                numberOfRowsInSectionCount = self.citiesSubscriptionSearchResultsList.count
+            }
+            else {
             let sectionTitle = self.regionFilterTitleArray[section]
             let sectionArray = self.regionFilterDictionary[sectionTitle]
             numberOfRowsInSectionCount = (sectionArray?.count)!
+            }
         }
 
         return numberOfRowsInSectionCount
+    }
+    
+    func setCellAccessibilityLabel(cell: UITableViewCell, city: String) {
+        let itemCFI = LibraryAPI.sharedInstance.parseCityState(cityState: city)
+        let stateName = stateCodeToStateDictionary[itemCFI.stateCode] as! String
+        let accessibilityLabel = itemCFI.cityName + " " + stateName
+        cell.accessibilityLabel = accessibilityLabel
     }
     
     func tableView(_ stepOneTableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -826,26 +906,40 @@ extension StepOne: UITableViewDataSource {
                 city = sectionArray[indexPath.row]
                 
                 cell.textLabel?.text = city
+                setCellAccessibilityLabel(cell: cell, city: city)
             }
             else {      // in search mode
                 cell.textLabel?.text = citiesSubscriptionSearchResultsList[indexPath.row]
-                
+                setCellAccessibilityLabel(cell: cell, city: citiesSubscriptionSearchResultsList[indexPath.row])
             }
             
         case BYSTATE:
-            sectionTitle = stateFilterTitleArray[indexPath.section]
-            sectionArray = stateFilterDictionary[sectionTitle]!
-            city = sectionArray[indexPath.row]
+            if (searching == false) {
+                sectionTitle = stateFilterTitleArray[indexPath.section]
+                sectionArray = stateFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
             
-            cell.textLabel?.text = city
-            
+                cell.textLabel?.text = city
+                setCellAccessibilityLabel(cell: cell, city: city)
+            }
+            else {      // in search mode
+                cell.textLabel?.text = citiesSubscriptionSearchResultsList[indexPath.row]
+                setCellAccessibilityLabel(cell: cell, city: citiesSubscriptionSearchResultsList[indexPath.row])
+            }
+
         default:        // by region
-            sectionTitle = regionFilterTitleArray[indexPath.section]
-            sectionArray = regionFilterDictionary[sectionTitle]!
-            city = sectionArray[indexPath.row]
+            if (searching == false) {
+                sectionTitle = regionFilterTitleArray[indexPath.section]
+                sectionArray = regionFilterDictionary[sectionTitle]!
+                city = sectionArray[indexPath.row]
             
-            cell.textLabel?.text = city
-        
+                cell.textLabel?.text = city
+                setCellAccessibilityLabel(cell: cell, city: city)
+            }
+            else {      // in search mode
+                cell.textLabel?.text = citiesSubscriptionSearchResultsList[indexPath.row]
+                setCellAccessibilityLabel(cell: cell, city: citiesSubscriptionSearchResultsList[indexPath.row])
+            }
         }   // end switch
         
         if (citySubscriptionSet.contains(city)) {
@@ -869,7 +963,7 @@ extension StepOne: UITableViewDataSource {
             case BYSTATE:
                 return self.stateFilterUniqueFirstCharacterArray
             default:
-                return self.regionFilterUniqueFirstCharacterArray
+                return nil  // self.regionFilterUniqueFirstCharacterArray
             }
         }
         return nil
@@ -972,13 +1066,10 @@ extension StepOne: UITableViewDelegate {
             citySubscriptionSet.insert(city)           // means was NOT selected and now IS SELECTED
         }
         
-        print("STEPONEVC: didSelectRowAt: citySubscriptionSet: ", citySubscriptionSet)
-        
     }
 
     
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        print("STEPONEVC: didDeselectRowAtIndexPath" )
         
         var sectionTitle = ""
         var sectionArray = [String]()
@@ -1013,10 +1104,7 @@ extension StepOne: UITableViewDelegate {
         else {
             citySubscriptionSet.insert(city)           // means was NOT selected and now IS SELECTED
         }
-        
-        print("STEPONEVC: didDeselectRowAt: citySubscriptionSet: ", citySubscriptionSet)
     }
-    
 }
 
 
@@ -1030,27 +1118,55 @@ extension StepOne: UISearchBarDelegate {
         }
         else {
             searching = true
-    
+            
             self.citiesSubscriptionSearchResultsList.removeAll()
             self.statesSubscriptionSearchResultsList.removeAll()
-        
+            
             for index in 0 ..< self.cityNamesRegionList.count {
-                let currentString = self.cityNamesRegionList[index] as String
-                if currentString.lowercased().range(of: searchText.lowercased())  != nil {
-                    self.citiesSubscriptionSearchResultsList.append(currentString.components(separatedBy: "|")[0])
-                }
-            }
+                
+                let formattedString = self.cityNamesRegionList[index] as String
+                let formattedArray = formattedString.components(separatedBy: "|")
+                
+                let cityState = formattedArray[0]
+                let stateName = formattedArray[1]
+                let region = formattedArray[2]
+                
+                var currentString = String()
+                
+                switch (scopeIndex) {       // list by cities
+                case BYCITY:
+                    currentString = cityState  // city SG
+                    let cityStateArray = formattedString.components(separatedBy: " ")
+                    let cityName = cityStateArray[0]
+                    if cityName.lowercased().range(of: searchText.lowercased())  != nil {
+                        self.citiesSubscriptionSearchResultsList.append(cityState)
+                    }
+                    
+                case BYSTATE:
+                    currentString = cityState  // city SG
+                    let itemCFI = LibraryAPI.sharedInstance.parseCityState(cityState: cityState)
+                    currentString = stateName
+                    if ( (currentString.lowercased().range(of: searchText.lowercased())  != nil) ||
+                         (itemCFI.stateCode.lowercased().range(of: searchText.lowercased())  != nil) ) {
+                        self.citiesSubscriptionSearchResultsList.append(cityState)
+                    }
+                    
+                default:
+                     currentString = region
+                     if currentString.lowercased().range(of: searchText.lowercased())  != nil {
+                        self.citiesSubscriptionSearchResultsList.append(cityState)
+                    }
+                }   // end switch
+
+                self.citiesSubscriptionSearchResultsList.sort()
+            }   // end for
         }
         self.stepOneTableView!.reloadData()
     }
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
         stepOneSearchBar.showsScopeBar = true
-        stepOneSearchBar.sizeToFit()
-//        stepOneSearchBar.setShowsCancelButton(true, animated: true)
-        
-        scopeIndex = BYCITY
-        
+        stepOneSearchBar.sizeToFit()        
         return true
     }
  

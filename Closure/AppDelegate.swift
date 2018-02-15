@@ -39,8 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             (granted, error) in
             guard granted else { return }
             self.getNotificationSettings()
-        }
-        
+        }        
         return true
     }
     
@@ -52,7 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
             }
-//            UIApplication.shared.registerForRemoteNotifications()
         }
     }
     
@@ -66,9 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func loadDeviceToken() -> String {
         var deviceToken = defaults.object(forKey:"myDeviceToken") as? String
-        
-//        print("loadDeviceToken: ", deviceToken)
-        
+
         if (deviceToken == nil) {
             deviceToken = "NOVALUE"
         }
@@ -85,17 +81,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-        
-//        print("\n\n>>>APPDELEGATE: applicationDidEnterBackground")
     }
     
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-        
-//        print("\n\n>>>APPDELEGATE: applicationWillEnterForeground")
-//        
-//        NotificationCenter.default.post(name: Notification.Name(rawValue: applicationDidBecomeActiveNSKey), object: self)
-
     }
     
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -131,8 +120,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         let token = tokenParts.joined()
-        
-//        print("\n\n", token)
         
         LibraryAPI.sharedInstance.setDeviceTokenWith(myDeviceToken: token)
         saveDeviceToken(myDeviceToken: token)

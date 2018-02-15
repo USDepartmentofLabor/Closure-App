@@ -6,7 +6,8 @@
 //
 
 import UIKit
-
+import Foundation
+import SystemConfiguration
 
 
 let INITIALSETTINGRUNSTATE = "INITIALSETTINGRUNSTATE"
@@ -314,5 +315,64 @@ class LibraryAPI: NSObject {
     func getDolStagingGetCityStatusesBase() -> String {
         return dolStagingGetCityStatusesBase
     }
+    
 
+    
+    func isInternetAvailable() -> Bool
+    {
+        var zeroAddress = sockaddr_in()
+        zeroAddress.sin_len = UInt8(MemoryLayout.size(ofValue: zeroAddress))
+        zeroAddress.sin_family = sa_family_t(AF_INET)
+        
+        let defaultRouteReachability = withUnsafePointer(to: &zeroAddress) {
+            $0.withMemoryRebound(to: sockaddr.self, capacity: 1) {zeroSockAddress in
+                SCNetworkReachabilityCreateWithAddress(nil, zeroSockAddress)
+            }
+        }
+        
+        var flags = SCNetworkReachabilityFlags()
+        if !SCNetworkReachabilityGetFlags(defaultRouteReachability!, &flags) {
+            return false
+        }
+        let isReachable = flags.contains(.reachable)
+        let needsConnection = flags.contains(.connectionRequired)
+        return (isReachable && !needsConnection)
+    }
+
+    
+    
+    struct cityFullIdentifierStruct {
+        var cityName = String()
+        var stateCode = String()
+        var stateName = String()
+        var regionName = String()
+    }
+    
+    typealias CFI = cityFullIdentifierStruct
+    func parseCityState(cityState: String) -> CFI {
+        var cfi = CFI()
+        
+        let formattedArray = cityState.components(separatedBy: " ")
+        // handle multi named city
+        let count = formattedArray.count
+        var cntr = 1
+        var bigCity = String()
+        for dot in formattedArray {
+            bigCity += dot
+            cntr += 1
+            if (cntr == count) {
+                break
+            }
+            else {
+                bigCity += " "
+            }
+        }
+        let state = formattedArray[count-1]
+        cfi.stateCode = state
+        cfi.cityName = bigCity
+        return cfi
+    }
+    
+    
+    
 }
