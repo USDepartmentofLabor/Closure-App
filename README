@@ -1,0 +1,372 @@
+
+
+CLOSURE - DOL Notification app.
+- Uses Alamofire to make HTTP request to EMC APIs
+- APIs are built by BAH
+
+HISTORY ---
+
+26OCT17 - V.00.00
+- genesis - basic framework with workspace complete.
+
+27OCT17 - v.00.01
+- ClosurePageVC - complete - can nav from stepZero to stepOne
+- added timer to stepZero to display welcome screen for 3 secs.
+
+01NOV17 - v.00.02
+- basic swrevealviewcontroller works. can slide out
+- next add all three VCs and navigate around
+
+02NOV17 - v.00.03
+- basic flow with swrevealvc works.
+- need to handle 'DONE' button
+- need to add tabld views for each scene.
+
+02NOV17 - V.00.04
+- reworked the flow - home is the status page.
+- setting got moved behind subsciption list.
+
+06NOV17 - v.00.05
+- implemented APN - got pem, etc.
+- can send notification to device via pusher.
+- TODO: resolve seque issue to status vc - all black.
+
+06NOV17 - v.00.06
+- segue to closureVC corrected.  needed link to menuButton.
+
+07NOV17 - v.00.07
+- ClosureVC - can build GetCityStatus URL with deviceToken and cityIDs from LibraryAPI
+
+08NOV17 - v.00.08
+- added app icons (need to redo per Jill)
+- can navigate to SettingsVC from ClosureVC
+
+09NOV17 - v.00.09
+- added select cities to swreveal navigator
+
+09NOV17 - v.00.10
+- initial run - select cities; subsequent runs - city status
+- NEXT: update nav bar in select cities to be in swreveal or normal mode.
+
+09NOV17 - v.00.11
+- got subscriptin list to download cities and upload city list.
+- can load city status from server
+- TODO: persist and retrieve city IDs to LibraryAPI
+- TODO: stand up detail screen
+
+13NOV17 - v.00.12
+- can get city status by posting a list of city ids to server
+
+13NOV17 - v.00.13
+- added open/close icon to status cell
+
+13NOV17 - v.00.14
+- CityDetailPage at 90%
+
+14NOV17 - v.00.15
+- getting close on Detail page
+- Punch List
+-- persist cityIDs to Memento
+-- persist cithNames to Memento
+-- ensure subsequent runs go directly to SWRevealVC
+-- change cityNameLable text color to red
+
+15NOV17 - v.00.16
+- opening sequence OK. Welcome => SWRevealVC w/ Alert to Add cities.
+
+15NOV17 - v.00.17
+- create a subscription list from scratch OK
+
+15NOV17 - v.00.18
+- can manage subscription list and is reflected in status scene.
+
+
+- THIS IS THE LATEST VERSION THAT CAN BE RUN WITHOUT A TEATHER TO THE MAC
+- WE WILL USE THIS TO BUILD FROM
+- BABY STEPS
+
+
+21NOV17 - v.00.19
+- added remote-notification to plist
+
+21NOV17 - v.00.20
+- added build label to splash screen
+
+21NOV17 - v.00.21
+- removed: persistCitySubscriptionListJSON
+- removed: persistCitySubscriptionListWithCityListJSON
+- removed: getCityStatusesUrlWithCityList
+from LibraryAPI
+
+21NOV17 - v.00.22
+- added to StepOne.viewWillAppear:
+if ( LibraryAPI.sharedInstance.cityNamesArrayIsEMPTY() == true) {
+    print("STEPONE: SELECTCITIES: cityNamesArrayIsEMPTY: TRUE")
+}
+
+- updated alert to select cities.
+- removed icons from swrevealvc
+- updated labels per wireframes
+
+21NOV17 - v.00.23
+- StepOne.cityNamesIdHash created
+
+21NOV17 - v.00.24
+- can persist cityNameIdHash to LibaryAPI.cityNameIdHash
+- NEXT TO DO: persist and retrieve to User.defaults
+/Users/liu-george-p/Desktop/DOL/Closure/Closure/HelperLibrary.swift
+21NOV17 - v.00.25
+- can persist cityNamesIdHash and retrieve to User.defaults
+
+24NOV17 - v,00.26
+- build 6 seems OK
+- basic cosmetics - done button mgmt, color schems, appicons done.
+- app is stable.
+- kind of...
+
+24NOV17 - v.00.27
+- stable but need to persist subscription set
+
+25NOV17 - v.00.28
+- can handle [{"update":{"region":null,"state":null,"city":null,"status":"Open","notes":"Open"}}] return type for city status
+- city values are persisted - BUT need to persist cityIds
+
+25NOV17 - v.00.29
+- build 8 posted to TestFlight
+
+28NOV17 - v.00.30
+- build 10
+- cleaned up UI and labeling issue in detail scene.
+
+28NOV17 - v.00.31
+- added color hex function
+
+29NOV17 - v.00.32
+- added code to handle duplicate Alexandria VA.
+
+29NOV17 - v.00.33
+- add create, delete capability to closure scene
+
+29NOV17 - v.00.34
+- removed alert to handle empty subscription list
+
+30NOV17 - v.00.35
+- cleaned up uisearchbar & keyboard behavior
+- can handle NO subscribed cities locally.  Nick working his end.
+- build 11
+
+30NOV17 - v.00.36
+- set Alamofire..timeoutIntervalForRequest = 15
+
+04DEC17 - v.00.37
+- added CANEL button to search bar in Settings.
+
+04DEC17 - v.00.38
+- added scope entries 'listbycity', listbystate, and listbyregion
+- flows OK
+- need to make collapse work.
+
+04DEC17 - v.00.39
+- can search by state
+
+05DEC17 - v.00.40
+- can search by region
+
+05DEC7 - v.00.41
+- can handle dupes
+
+05DEC17
+- implemented search on ClosureVC
+
+06DEC17 - v.00.42
+- navigation works.
+
+06DEC17 - v.00.43
+- basic search ok
+- need to work on state code
+
+06DEC17 - v.00.44
+- can search by state code
+- ready for build 12
+
+07DEC17 - v.00.45
+- cleaned up code.
+- waiting for comments for IR testers.
+
+07DEC17 - v.00.46
+- fixed bug - cannot delete all cities from My Cities or My Subscription scenes
+
+11DEC17 - v.00.47
+- can search on region name
+- final clean up of code.
+- ready to push to OPA github
+
+11DEC17 - v.00.48
+- cleared seperator lines from swreveal table view
+
+/*** FROM THIS POINT FORWARD - THE APP WILL UNDERGO A MASSIVE REORG ***/
+
+15DEC17 - v.00.49
+- remove hamburger controls
+- rewired navigation
+- basic flow OK
+
+15DEC17 - v.00.50
+- moved search bar and added segmented control
+
+15DEC17 - v.00.51
+- search bar implemented
+
+15DEC17 - v.00.52
+- removed search bar in closurevc
+- added segment control to closurevc
+
+18DEC17 - v.00.53
+- by state works.
+- need to add select capability logic
+
+18DEC17 - v.00.54
+- by state completely works.
+
+18DEC17 - v.00.55
+- can load regionFilterDictionary
+
+18DEC17 - v.00.56
+- by region works
+
+18DEC17 - v.00.57
+- first time switch works
+
+18DEC17 - V.00.58
+- can hide search bar when in bystate and byregion filter modes
+
+19DEC17 - v.00.59
+- working on JIRA findings - seqrch by state, region OK; search bar cleanded up.
+
+19DEC17 - v.00.60
+- begun detail scene clean up: scroll view for citynoteslabel, back arrow button
+- next weather
+
+19DEC17 - v.00.61
+- got weather parsing to work.
+- all moot cuz not in wireframes!
+
+20DEC17 - v.00.62
+- cleaned up details scene
+
+20DEC17 - V.00.62
+- pushed build 18
+- still need to color background of uisearchbar text field to white
+- build for iPhone X
+
+21DEC17 = v.00.63
+- implemented index list for state and region scopes.
+
+24DEC17 - v.00.64
+- search bar appearance OK
+- index list for state OK
+- TODO: index list for city and region
+
+25DEC17 - v.00.66
+- got index list for state and region working
+
+26DEC17 - v.00.67
+- index list for all three works.
+
+27DEC17 - v.00.68
+- select on LHS ok
+- index ok
+- can create subscription list
+
+27DEC17 - v.00.69
+- corrected bug in search mode - picking up wrong city. - FIXED.
+- TODO: highlight and turn on check box on LHS for selected city.
+- NO GIT PUSH YET!
+
+28DEC17 - v.00.70
+- can retain selected city status in Select Cities scene.
+- build 21 pushed
+
+28DEC17 - v.00.71
+- cleaned up verbiage on alerts
+- build 22 pushed.
+
+28DEC17 - v.00.72
+- modified code to handle multiple messages from the same city.
+- removing the message from the status list does not remove from the subscription list.
+- need to add a timestamp to status cell
+- waiting on wireframe input from jill.
+- WILL GO WITH LATEST RECORD FROM SERVER
+- build 23 pushed
+
+02JAN18 - v.00.73
+- changed + to red color
+- returned logic to remove deleted city from status list to delete from subscription list
+- build 24 pushed
+
+02JAN18 - v.00.74
+- download xcode 9.2
+- built for iPnone X - looks good.
+- build 25 pushed
+
+03JAN18 - v.00.75
+- minor cosmetic changes
+- build 29 pushed
+- ready for OPA
+
+04JAN18 - v.00.76
+- deselect working.
+- build 30 pushed
+
+11JAN18 - v.00.77
+- added pull to refresh
+- changed APS environment to production from development in entitlements
+- builds are now pushed to Giri in OPA
+
+19JAN18 - v.00.78
+- added default open status CITYSTATUS object.
+
+27JAN18 - v.00.79
+- corrected multi-name city problem.
+- build 40 pushed
+
+27JAN18 - v.00.80
+- can refresh when going into active state
+- build 41 pushed
+
+29JAN18 - v.00.81
+- added reachability test in loadCityStatusFromMtws
+- removed test for nil in loadCityStatusFromMtws
+
+30JAN18 - v.00.82
+- When Typing "ill" for "Illinois" in "State" Tab I Should See That State First functional - FIXED
+- build 43 pushed
+
+31JAN18 - v.00.83
+- alphabetize search results list
+- can handle state code.
+- build 44 pushed.
+
+01FEB18 - v.00.84
+- basic color accessibility changes.
+- added voice over capability to read the city and entire state name, NOT state code.
+
+07FEB18 - v.00.85
+- made color changes to <-, +, Done to black
+- made color change index list to black
+- removed A-Z in region scope.
+- build 47 pushed
+
+09FEB18
+- figured out the pull down refresh problem - Alamofire, used NOTIFICATIONS to fix
+- build 49 pushed
+
+13FEB18
+- ORIGINAL closure cell height 56
+- increase to add a updated date field.
+
+15FEB18 - v.00.86
+- cleaned up spinning wheel
+- got alamofire caching working
+- build 52 pushed for internal testing
+

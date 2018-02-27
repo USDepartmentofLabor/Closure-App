@@ -662,6 +662,7 @@ class StepOne : UIViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+    
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         
         //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
@@ -675,6 +676,12 @@ class StepOne : UIViewController {
         self.doneButton.accessibilityLabel = "Done selecting cities"
     }
 
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("STEPONEVC: textFieldShouldReturn <<<<<<<<<<<<")
+        return false
+    }
+    
+    
     func prepStepOneSearchBar() {
         stepOneSearchBar.layer.cornerRadius = 20
         stepOneSearchBar.layer.borderWidth = 1
@@ -684,7 +691,7 @@ class StepOne : UIViewController {
         
         setSearchBarToWhite()
         
-        var textFieldInsideSearchBar = stepOneSearchBar.value(forKey: "searchField") as? UITextField
+        let textFieldInsideSearchBar = stepOneSearchBar.value(forKey: "searchField") as? UITextField
         textFieldInsideSearchBar?.textColor = UIColor.black
         
         let imageV = textFieldInsideSearchBar?.leftView as! UIImageView
@@ -1142,14 +1149,39 @@ extension StepOne: UISearchBarDelegate {
                         self.citiesSubscriptionSearchResultsList.append(cityState)
                     }
                     
+                // 1. upon entering the first two characters assume user is looking at state code
+                // 2. if not found then the user is searching by state name.
                 case BYSTATE:
                     currentString = cityState  // city SG
                     let itemCFI = LibraryAPI.sharedInstance.parseCityState(cityState: cityState)
                     currentString = stateName
-                    if ( (currentString.lowercased().range(of: searchText.lowercased())  != nil) ||
-                         (itemCFI.stateCode.lowercased().range(of: searchText.lowercased())  != nil) ) {
-                        self.citiesSubscriptionSearchResultsList.append(cityState)
+                    
+                    let stLen = searchText.count
+                    let start = currentString.startIndex
+                    
+                    // currentString: ohio  search text: texas  ugh!
+                    var end = currentString.endIndex
+                    if (currentString.count > stLen) {
+                     end = currentString.index(currentString.startIndex, offsetBy: stLen)
                     }
+
+                    let substr = currentString[start..<end]
+            
+                    switch (searchText.count) {
+                    case 1:
+                        break
+                        
+                    case 2:         // first assume a state code search  if that does not work then its part of the state name
+                        if ( (substr.lowercased().range(of: searchText.lowercased())  != nil) ||
+                            (itemCFI.stateCode.lowercased().range(of: searchText.lowercased())  != nil) ) {
+                            self.citiesSubscriptionSearchResultsList.append(cityState)
+                        }
+                        
+                    default:        // GREATER THAN 2 CHARS -> state name search
+                        if (substr.lowercased().range(of: searchText.lowercased())  != nil) {
+                            self.citiesSubscriptionSearchResultsList.append(cityState)
+                        }
+                    }   // end switch
                     
                 default:
                      currentString = region

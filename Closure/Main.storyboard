@@ -68,7 +68,7 @@
                             <searchBar contentMode="redraw" placeholder="Please enter City name" backgroundImage="searchBarWhite.png" translatesAutoresizingMaskIntoConstraints="NO" id="GaT-Cf-aQv">
                                 <rect key="frame" x="45" y="69" width="285" height="44"/>
                                 <color key="barTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
                             </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
