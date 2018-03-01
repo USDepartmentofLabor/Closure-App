@@ -151,14 +151,7 @@ class CityDetailPageVC: UIViewController {
                                                 let backUrl: String = optionalArr![1]
                                                 
                                                 icon = "https:" + backUrl
-                                                
-//
-//                      self.cityDetailImageView.downloadedFrom(link: icon!)
-//                      self.cityDetailTempLabel.text = String(describing: temperature) + " F"
-                                                
-//                      let tempString = String(describing: temperature)
-//                      print(tempString)
-                                                
+                                                                                            
                                                 self.cityDetailTempLabel.text = "" //tempString + " F"
 
                                             }

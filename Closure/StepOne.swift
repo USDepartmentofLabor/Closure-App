@@ -1125,7 +1125,8 @@ extension StepOne: UISearchBarDelegate {
         }
         else {
             searching = true
-            
+            var stateCodeToStateDictionary = Dictionary<String, String>()
+            stateCodeToStateDictionary.removeAll()
             self.citiesSubscriptionSearchResultsList.removeAll()
             self.statesSubscriptionSearchResultsList.removeAll()
             
@@ -1174,7 +1175,8 @@ extension StepOne: UISearchBarDelegate {
                     case 2:         // first assume a state code search  if that does not work then its part of the state name
                         if ( (substr.lowercased().range(of: searchText.lowercased())  != nil) ||
                             (itemCFI.stateCode.lowercased().range(of: searchText.lowercased())  != nil) ) {
-                            self.citiesSubscriptionSearchResultsList.append(cityState)
+                            let stcsdKey = itemCFI.stateCode + itemCFI.cityName
+                            stateCodeToStateDictionary[stcsdKey] = cityState
                         }
                         
                     default:        // GREATER THAN 2 CHARS -> state name search
@@ -1189,8 +1191,17 @@ extension StepOne: UISearchBarDelegate {
                         self.citiesSubscriptionSearchResultsList.append(cityState)
                     }
                 }   // end switch
-
-                self.citiesSubscriptionSearchResultsList.sort()
+                
+                if (scopeIndex == BYSTATE) {
+                    self.citiesSubscriptionSearchResultsList.removeAll()
+                    let sortedKeys = Array(stateCodeToStateDictionary.keys).sorted()
+                    for itemKey in sortedKeys {
+                        self.citiesSubscriptionSearchResultsList.append( stateCodeToStateDictionary[itemKey]! )
+                    }
+                }
+                else {
+                    self.citiesSubscriptionSearchResultsList.sort()
+                }
             }   // end for
         }
         self.stepOneTableView!.reloadData()
