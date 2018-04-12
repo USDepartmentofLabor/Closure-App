@@ -34,6 +34,7 @@ class CityDetailPageVC: UIViewController {
 
     @IBOutlet weak var cityNotesLabel: UILabel!
     
+    
     @IBAction func doneButtonPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "myCitiesNavVC") as UIViewController
@@ -133,7 +134,6 @@ class CityDetailPageVC: UIViewController {
                         if let cwPropertiesDictionary = cwDictionary["properties"] as? [String: Any] {
                     
                             if  let cwPeriodsArray = cwPropertiesDictionary["periods"] as? [Any]  {              //[Dictionary<String, Array<String>>]  {
-                                print("DETAILVC: showWeatherTempAndIcon: temperature: ", cwPeriodsArray.count)
                                 
                                 for item in cwPeriodsArray as [Any] {
                                     
@@ -172,6 +172,10 @@ class CityDetailPageVC: UIViewController {
 
     }   // end getWeatherTempAndIcon
     
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        LibraryAPI.sharedInstance.setOriginatingNavVC(originatingNavVC: "CityDetailNavigator")
+    }
     
 }   // end CityDetailPageVC
 

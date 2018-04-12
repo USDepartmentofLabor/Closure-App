@@ -26,6 +26,8 @@ class LibraryAPI: NSObject {
     
     private var runState = String()   // either initial or subsequent run
     
+    private var originatingNavVC = String()
+    
     private var selectedCityStatus = CityStatus(region: "", state: "", cityName: "", cityStatus: "", cityNotes: "", updatedOn: "")
     
     let EMPTY_STRING = ""
@@ -373,6 +375,11 @@ class LibraryAPI: NSObject {
         return cfi
     }
     
+    func setOriginatingNavVC(originatingNavVC: String) {
+        self.originatingNavVC = originatingNavVC
+    }
     
-    
+    func getOriginatingNavVC() -> String {
+        return self.originatingNavVC
+    }
 }

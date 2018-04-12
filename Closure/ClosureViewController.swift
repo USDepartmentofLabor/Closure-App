@@ -51,11 +51,12 @@ class ClosureViewController: UIViewController {
     
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        LibraryAPI.sharedInstance.setOriginatingNavVC(originatingNavVC: "myCitiesNavVC")
     }
-
+    
+    
     private func loadCityStatusesFromMtws() {
         if (LibraryAPI.sharedInstance.isInternetAvailable() == true) {
             self.loadCityStatusesFromMtwsX()
@@ -340,8 +341,6 @@ extension ClosureViewController: UITableViewDataSource, UITableViewDelegate {
         (cell.contentView.viewWithTag(100) as! UILabel).text = cityStatusCell.cityName + " " + cityStatusCell.state // as? String
         (cell.contentView.viewWithTag(110) as! UILabel).text = cityStatusCell.cityStatus // as? String
 
-//       (cell.contentView.viewWithTag(200) as! UILabel).text = cityStatusCell.updatedOn // as? String
-        
         (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "openGreen24.png")
         if cityStatusCell.cityStatus.lowercased().range(of:"closed") != nil {
             (cell.contentView.viewWithTag(120) as! UIImageView).image = UIImage(named: "closeRed17.png")

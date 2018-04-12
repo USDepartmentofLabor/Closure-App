@@ -12,7 +12,6 @@ import Alamofire
 import GoogleMaps
 
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
@@ -47,7 +46,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func getNotificationSettings() {
         UNUserNotificationCenter.current().getNotificationSettings { (settings) in
             guard settings.authorizationStatus == .authorized else { return }
-            
             DispatchQueue.main.async {
                 UIApplication.shared.registerForRemoteNotifications()
             }

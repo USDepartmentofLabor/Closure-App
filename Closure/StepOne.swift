@@ -181,11 +181,6 @@ class StepOne : UIViewController {
     
     @IBOutlet weak var stepOneTableView: UITableView!
     
-//    func initializeIndexArray(){
-//        indexList = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-//    }
-//
-    
     ///////////////////////////////////////////////////////////////////
     //MARK: CITY INDEX LIST DATA STRUCTURES AND OPS
     
@@ -197,16 +192,10 @@ class StepOne : UIViewController {
         }
         cityFilterUniqueFirstCharacterArray = Array(Set(cityFilterUniqueFirstCharacterArray).sorted())
         
-//        print("cityFilterUniqueFirstCharacterArray: ", cityFilterUniqueFirstCharacterArray)
-    }
+   }
     
     func initializeCityFilterTitleArray() {
-        
-//        print("STEPONEVC: initializeCityFilterTitleArray: cityFilterDictionary", cityFilterDictionary)
-        
         cityFilterTitleArray = cityFilterDictionary.keys.sorted()
-        
-//        print("STEPONEVC: initializeCityFilterTitleArray: cityFilterTitleArray", cityFilterTitleArray)
     }
     
     func initializeCityFilterDictionary() {
@@ -242,8 +231,6 @@ class StepOne : UIViewController {
     
     // don't expect the number of states to change
     func initializeCityIndexToSectionMapping() {
-//        cityIndexToSectionDictionary = ["A": 8, "B": 18, "C": 9, "D": 2, "E": 14, "F": 20, "G": 13, "H": 0, "I": 4, "J": 3, "K": 19, "L": 17, "M": 5, "N": 10, "O": 21, "P": 24, "Q": 25, "R": 12, "S": 7, "T": 23, "U": 16, "V": 15, "W":2, "X": 1, "Y": 11, "Z": 6]
-        
         cityIndexToSectionDictionary = ["A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5, "G": 6, "H": 7, "I": 8, "J": 9, "K": 10, "L": 11, "M": 12, "N": 13, "O": 14, "P": 15, "Q": 16, "R": 17, "S": 18, "T": 19, "U": 20, "V": 21, "W": 22, "X": 23, "Y": 24, "Z": 25]
     }
 
@@ -436,11 +423,9 @@ class StepOne : UIViewController {
         initializeCityFilterTitleArray()
         initializeCityUniqueFirstCharacterArray()
         initializeCityIndexToSectionMapping()
-       
     }
     
     func initializeThemThangs() {
-        
         initializeStateFilterDictionary()
         initializeStateFilterTitleArray()
         initializeStateUniqueFirstCharacterArray()
@@ -452,8 +437,6 @@ class StepOne : UIViewController {
         initializeRegionUniqueFirstCharacterArray()
         
         initialStateCodeToStateDictionary()
-        
-//        initializeIndexArray()
     }
     
     
@@ -461,8 +444,6 @@ class StepOne : UIViewController {
     //MARK: API ENDPOINT OPS    
     func readCityListFromMtws() {
         showLoadingHUD()
-
-        
         initializeCityFilterDictionary()
         initializeCityFilterTitleArray()
 
@@ -630,9 +611,6 @@ class StepOne : UIViewController {
     
     func handleReadCityListFromMtwsSuccess() {
         self.hideLoadingHUD()
-        // 2. prep for data table load
-//        self.stepOneTableView.delegate = self
-//        self.stepOneTableView.dataSource = self
         
         self.stepOneTableView.allowsSelectionDuringEditing = true
         self.stepOneTableView.backgroundView = nil
@@ -696,7 +674,7 @@ class StepOne : UIViewController {
         
         let imageV = textFieldInsideSearchBar?.leftView as! UIImageView
         imageV.image = imageV.image?.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
-//        let fancyMagnifierSwiftColor = UIColor(red: 0xFD, green: 0x57, blue: 0x39)
+
         let fancyMagnifierSwiftColor = UIColor(red: 0x0, green: 0x0, blue: 0x0)
         imageV.tintColor = fancyMagnifierSwiftColor
         
@@ -768,11 +746,9 @@ class StepOne : UIViewController {
         view.addGestureRecognizer(tap)
     }
     
-    
     override func viewWillDisappear(_ animated: Bool) {
         NotificationCenter.default.removeObserver(self)
     }   // viewWillDisappear
-    
     
     //MARK : Progress loading HUD Ops ----------------------
     private func showLoadingHUD() {
@@ -1031,6 +1007,13 @@ extension StepOne: UITableViewDataSource {
         }
         return subviewArray
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        LibraryAPI.sharedInstance.setOriginatingNavVC(originatingNavVC: "selectCitiesNavVC")
+    }
+
+    
 }   // end class
 
 
@@ -1216,7 +1199,6 @@ extension StepOne: UISearchBarDelegate {
     public func searchBarShouldEndEditing(_ searchBar: UISearchBar) -> Bool {
         stepOneSearchBar.showsScopeBar = false
         stepOneSearchBar.sizeToFit()
-//        stepOneSearchBar.setShowsCancelButton(false, animated: true)
         return true
     }
     

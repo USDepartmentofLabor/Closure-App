@@ -21,6 +21,10 @@
 		CB3FF3811FA26D3400608F5D /* LibraryAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3FF3801FA26D3400608F5D /* LibraryAPI.swift */; };
 		CB3FF3831FA26D6700608F5D /* CityStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3FF3821FA26D6700608F5D /* CityStatus.swift */; };
 		CB4A123A1FBA1269004CA195 /* CityDetailPageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */; };
+		CB59460C207FB46800AB69C8 /* info-icon-20.png in Resources */ = {isa = PBXBuildFile; fileRef = CB59460B207FB46700AB69C8 /* info-icon-20.png */; };
+		CB59460E207FB66400AB69C8 /* ContactUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB59460D207FB66400AB69C8 /* ContactUsViewController.swift */; };
+		CB594610207FB7D000AB69C8 /* PoweredByOCIO.png in Resources */ = {isa = PBXBuildFile; fileRef = CB59460F207FB7CF00AB69C8 /* PoweredByOCIO.png */; };
+		CB5AC320205C3164001890F4 /* OCIO_LogoVariation_Thick_4C_NoType.png in Resources */ = {isa = PBXBuildFile; fileRef = CB5AC31F205C3164001890F4 /* OCIO_LogoVariation_Thick_4C_NoType.png */; };
 		CB64837B1FC85F5800141D1E /* closeRed24.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6483791FC85F5800141D1E /* closeRed24.png */; };
 		CB64837C1FC85F5800141D1E /* openGreen24.png in Resources */ = {isa = PBXBuildFile; fileRef = CB64837A1FC85F5800141D1E /* openGreen24.png */; };
 		CB6FD3742000202A00E30FEC /* seattle_splash1.png in Resources */ = {isa = PBXBuildFile; fileRef = CB6FD3732000202900E30FEC /* seattle_splash1.png */; };
@@ -58,6 +62,10 @@
 		CB3FF3801FA26D3400608F5D /* LibraryAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryAPI.swift; sourceTree = "<group>"; };
 		CB3FF3821FA26D6700608F5D /* CityStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityStatus.swift; sourceTree = "<group>"; };
 		CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CityDetailPageVC.swift; sourceTree = "<group>"; };
+		CB59460B207FB46700AB69C8 /* info-icon-20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info-icon-20.png"; sourceTree = "<group>"; };
+		CB59460D207FB66400AB69C8 /* ContactUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsViewController.swift; sourceTree = "<group>"; };
+		CB59460F207FB7CF00AB69C8 /* PoweredByOCIO.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = PoweredByOCIO.png; sourceTree = "<group>"; };
+		CB5AC31F205C3164001890F4 /* OCIO_LogoVariation_Thick_4C_NoType.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = OCIO_LogoVariation_Thick_4C_NoType.png; path = Closure/OCIO_LogoVariation_Thick_4C_NoType.png; sourceTree = "<group>"; };
 		CB6483791FC85F5800141D1E /* closeRed24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = closeRed24.png; path = ClosureImages/closeRed24.png; sourceTree = "<group>"; };
 		CB64837A1FC85F5800141D1E /* openGreen24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = openGreen24.png; path = ClosureImages/openGreen24.png; sourceTree = "<group>"; };
 		CB6FD3732000202900E30FEC /* seattle_splash1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = seattle_splash1.png; path = ClosureImages/seattle_splash1.png; sourceTree = "<group>"; };
@@ -105,6 +113,7 @@
 		CB0ECCA01FA239EB00DC6E94 = {
 			isa = PBXGroup;
 			children = (
+				CB5AC31F205C3164001890F4 /* OCIO_LogoVariation_Thick_4C_NoType.png */,
 				CB91F4461FE46ABE00063BD1 /* SWRevealViewController.h */,
 				CB91F4471FE46ABE00063BD1 /* SWRevealViewController.m */,
 				CB83106F1FA3C2E400E6A4C6 /* README */,
@@ -160,6 +169,7 @@
 		CB0ECCC61FA23D7C00DC6E94 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
+				CB59460D207FB66400AB69C8 /* ContactUsViewController.swift */,
 				CB0E2083200674DD00B02891 /* EmailerViewController.swift */,
 				CB4A12391FBA1269004CA195 /* CityDetailPageVC.swift */,
 				CB99E03E1FB0E1CE00C4F3E9 /* ClosureViewController.swift */,
@@ -187,6 +197,8 @@
 		CB83106C1FA3853500E6A4C6 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				CB59460F207FB7CF00AB69C8 /* PoweredByOCIO.png */,
+				CB59460B207FB46700AB69C8 /* info-icon-20.png */,
 				CB6FD3732000202900E30FEC /* seattle_splash1.png */,
 				CBD114001FF4313E00828E7E /* closeRed17.png */,
 				CB1710951FEBF21600B79184 /* searchBarWhite.png */,
@@ -293,8 +305,11 @@
 				CB0F7BF01FAA4A35001EBFE1 /* Main.storyboard in Resources */,
 				CB0F05761FE994D000690F33 /* leftarroworange.png in Resources */,
 				CBE036381FAA0E7F001E496C /* menu@3x.png in Resources */,
+				CB594610207FB7D000AB69C8 /* PoweredByOCIO.png in Resources */,
 				CB0F05741FE9907500690F33 /* left-arrow.png in Resources */,
 				CB2E760C1FA8EFA9001845A4 /* settings.png in Resources */,
+				CB59460C207FB46800AB69C8 /* info-icon-20.png in Resources */,
+				CB5AC320205C3164001890F4 /* OCIO_LogoVariation_Thick_4C_NoType.png in Resources */,
 				CBE036361FAA0E7F001E496C /* menu.png in Resources */,
 				CB83106E1FA3854400E6A4C6 /* scotty.jpg in Resources */,
 			);
@@ -374,6 +389,7 @@
 				CB0ECCCA1FA23EC300DC6E94 /* StepOne.swift in Sources */,
 				CB4A123A1FBA1269004CA195 /* CityDetailPageVC.swift in Sources */,
 				CB0E2084200674DE00B02891 /* EmailerViewController.swift in Sources */,
+				CB59460E207FB66400AB69C8 /* ContactUsViewController.swift in Sources */,
 				CB3FF3831FA26D6700608F5D /* CityStatus.swift in Sources */,
 				CB0ECCCD1FA2625300DC6E94 /* HelperLibrary.swift in Sources */,
 			);
