@@ -12,8 +12,8 @@ import MapKit
 
 class ContactUsViewController: UIViewController {
 
-    let CONTACT_US_PHONE_NUMBER = "855-522-6748"
-    let CONTACT_US_EMAIL_POC = "enterpriseservicedesk@dol.gov"
+    let CONTACT_US_PHONE_NUMBER = "866-487-2365"
+    let CONTACT_US_EMAIL_POC = "webmaster@dol.gov"
     let CONTACT_US_ISSUES_URL = "https://github.com/USDepartmentofLabor/EnterpriseNotification-IOS/issues"
     
     @IBAction func doneButtonnPressed(_ sender: Any) {
