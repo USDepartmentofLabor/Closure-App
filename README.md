@@ -1,3 +1,6 @@
+>[!WARNING]
+>This repository has been archived and is no longer maintained. The code is provided for historical reference and may contain unpatched or unknown vulnerabilities. It should ***not*** be used in production systems.
+
 Closure-Notifier
 
 Closure-Notifier (App), is an iOS app to manage a subscription list of cities of interest to receive notifications from U.S. Department of Labor Emergency Management Center.
